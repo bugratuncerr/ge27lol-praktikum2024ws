@@ -1,0 +1,42 @@
+{
+    "city": "Berlin",
+    "latitude": 52.5234292,
+    "longitude": 13.4114365,
+    "start_datetime": "2024-12-09 22:17:56",
+    "finish_datetime": "",
+    "incidents": [
+        [],
+        [],
+        []
+    ],
+    "current_travel_time": [
+        6.976744186046512,
+        6.976744186046512,
+        6.976744186046512
+    ],
+    "live_speeds": [
+        86,
+        86,
+        86
+    ],
+    "average_speeds": [
+        86,
+        86,
+        86
+    ],
+    "temperatures": [
+        4.2,
+        4.2,
+        4.2
+    ],
+    "weather_conditions": [
+        "Light rain",
+        "Light rain",
+        "Light rain"
+    ],
+    "timestamps": [
+        "22:17:56",
+        "22:18:56",
+        "22:19:56"
+    ]
+}

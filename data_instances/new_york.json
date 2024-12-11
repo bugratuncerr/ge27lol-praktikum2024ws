@@ -1,0 +1,14 @@
+{
+    "city": "New York",
+    "latitude": 40.7128,
+    "longitude": -74.0060,
+    "start_datetime": "2024-12-09 10:00:00",
+    "finish_datetime": "2024-12-09 11:00:00",
+    "incidents": ["Traffic Jam at Times Square", "No incidents", "Accident on FDR Drive", "Roadwork on Brooklyn Bridge", "No incidents", "Heavy Traffic on 5th Ave"],
+    "current_travel_time": ["50", "52", "47", "51", "50", "55", "48", "49", "50", "52", "55", "53"],
+    "live_speeds": [40, 42, 44, 41, 43, 39, 45, 46, 42, 43, 39, 41],
+    "average_speeds": [50, 52, 49, 51, 50, 46, 54, 53, 51, 49, 46, 47],
+    "temperatures": [10, 11, 9, 10, 11, 12, 13, 12, 10, 11, 10, 9],
+    "weather_conditions": ["Clear", "Clear", "Cloudy", "Clear", "Clear", "Clear", "Partly Cloudy", "Partly Cloudy", "Clear", "Rainy", "Rainy", "Cloudy"],
+    "timestamps": ["10:00:00", "10:05:00", "10:10:00", "10:15:00", "10:20:00", "10:25:00", "10:30:00", "10:35:00", "10:40:00", "10:45:00", "10:50:00", "10:55:00"]
+}

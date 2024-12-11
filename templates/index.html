@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic & Weather Data Comparison</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href=" https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.css " rel="stylesheet">
+    <script src=" https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.min.js "></script>
+
+    <style>
+        body {
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .card {
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+        }
+
+        .map-container {
+            height: 400px;
+            width: 100%;
+        }
+
+        .row {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="text-center mb-4">Traffic & Weather Data Comparison</h1>
+
+        <div class="row">
+            <!-- Dropdown for Selecting Instances -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        Select Two Data Instances
+                    </div>
+                    <div class="card-body">
+                        <form id="instance-form">
+                            <div class="form-group">
+                                <label for="instance1">Select First Instance</label>
+                                <select id="instance1" class="form-control">
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
+                            <div class="form-group mt-3">
+                                <label for="instance2">Select Second Instance</label>
+                                <select id="instance2" class="form-control">
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-3">Compare</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Containers -->
+            <div class="row">
+                <!-- Instance 1 Map -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Instance 1 Map
+                        </div>
+                        <div class="card-body">
+                            <div id="map1" class="map-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instance 2 Map -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Instance 2 Map
+                        </div>
+                        <div class="card-body">
+                            <div id="map2" class="map-container"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Instance 1 Map -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Live Speed Comparison
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="liveSpeedChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Temperature Comparison
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="tempChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Instance 1 Map -->
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Average Speed vs Weather Condition
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="avgSpeedWeatherChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Traffic Speed vs Temperature Correlation
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="speedTempCorrelationChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+
+    <script>
+        // Fetch the list of data instances
+        fetch('/instances')
+            .then(response => response.json())
+            .then(data => {
+                const instance1Select = document.getElementById('instance1');
+                const instance2Select = document.getElementById('instance2');
+                data.forEach(file => {
+                    const option = document.createElement('option');
+                    option.value = file;
+                    option.textContent = file;
+                    instance1Select.appendChild(option);
+                    instance2Select.appendChild(option.cloneNode(true));
+                });
+            });
+
+        // Event listener for form submission
+        document.getElementById('instance-form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            const instance1 = document.getElementById('instance1').value;
+            const instance2 = document.getElementById('instance2').value;
+
+            // Fetch the data for the selected instances
+            Promise.all([
+                fetch(`/data/${instance1}`).then(response => response.json()),
+                fetch(`/data/${instance2}`).then(response => response.json())
+            ])
+                .then(([data1, data2]) => {
+                    // Prepare data for comparison
+                    const timestamps = data1.timestamps;
+
+                    const liveSpeeds1 = data1.live_speeds;
+                    const liveSpeeds2 = data2.live_speeds;
+
+                    const temperatures1 = data1.temperatures;
+                    const temperatures2 = data2.temperatures;
+
+                    const avgSpeeds1 = data1.average_speeds;
+                    const avgSpeeds2 = data2.average_speeds;
+
+                    const weatherConditions1 = data1.weather_conditions;
+                    const weatherConditions2 = data2.weather_conditions;
+
+                    // Create Line Chart for Live Speeds Comparison
+                    new Chart(document.getElementById('liveSpeedChart'), {
+                        type: 'line',
+                        data: {
+                            labels: timestamps,
+                            datasets: [{
+                                label: 'City 1 Live Speed (km/h)',
+                                data: liveSpeeds1,
+                                borderColor: 'rgb(75, 192, 192)',
+                                fill: false,
+                                tension: 0.1
+                            }, {
+                                label: 'City 2 Live Speed (km/h)',
+                                data: liveSpeeds2,
+                                borderColor: 'rgb(153, 102, 255)',
+                                fill: false,
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    title: { display: true, text: 'Time' }
+                                },
+                                y: {
+                                    title: { display: true, text: 'Speed (km/h)' },
+                                    min: 0
+                                }
+                            }
+                        }
+                    });
+
+                    // Create Line Chart for Temperature Comparison
+                    new Chart(document.getElementById('tempChart'), {
+                        type: 'line',
+                        data: {
+                            labels: timestamps,
+                            datasets: [{
+                                label: 'City 1 Temperature (°C)',
+                                data: temperatures1,
+                                borderColor: 'rgb(255, 99, 132)',
+                                fill: false,
+                                tension: 0.1
+                            }, {
+                                label: 'City 2 Temperature (°C)',
+                                data: temperatures2,
+                                borderColor: 'rgb(54, 162, 235)',
+                                fill: false,
+                                tension: 0.1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    title: { display: true, text: 'Time' }
+                                },
+                                y: {
+                                    title: { display: true, text: 'Temperature (°C)' }
+                                }
+                            }
+                        }
+                    });
+
+                    // Create Scatter Plot for Traffic Speed vs Temperature Correlation
+                    new Chart(document.getElementById('speedTempCorrelationChart'), {
+                        type: 'scatter',
+                        data: {
+                            labels: timestamps,
+                            datasets: [{
+                                label: 'City 1',
+                                data: liveSpeeds1.map((speed, index) => ({ x: temperatures1[index], y: speed })),
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgb(75, 192, 192)',
+                                fill: false
+                            }, {
+                                label: 'City 2',
+                                data: liveSpeeds2.map((speed, index) => ({ x: temperatures2[index], y: speed })),
+                                borderColor: 'rgb(153, 102, 255)',
+                                backgroundColor: 'rgb(153, 102, 255)',
+                                fill: false
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    title: { display: true, text: 'Temperature (°C)' },
+                                    min: Math.min(...temperatures1, ...temperatures2),
+                                    max: Math.max(...temperatures1, ...temperatures2)
+                                },
+                                y: {
+                                    title: { display: true, text: 'Traffic Speed (km/h)' },
+                                    min: 0
+                                }
+                            }
+                        }
+                    });
+
+                    // Create Bar Chart for Average Speed vs Weather Conditions
+                    const avgSpeedByWeather1 = calculateAverageSpeedByWeather(weatherConditions1, avgSpeeds1);
+                    const avgSpeedByWeather2 = calculateAverageSpeedByWeather(weatherConditions2, avgSpeeds2);
+
+                    new Chart(document.getElementById('avgSpeedWeatherChart'), {
+                        type: 'bar',
+                        data: {
+                            labels: Object.keys(avgSpeedByWeather1),
+                            datasets: [{
+                                label: 'City 1',
+                                data: Object.values(avgSpeedByWeather1),
+                                borderColor: 'rgb(75, 192, 192)',
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)'
+                            }, {
+                                label: 'City 2',
+                                data: Object.values(avgSpeedByWeather2),
+                                borderColor: 'rgb(153, 102, 255)',
+                                backgroundColor: 'rgba(153, 102, 255, 0.2)'
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    title: { display: true, text: 'Weather Condition' }
+                                },
+                                y: {
+                                    title: { display: true, text: 'Average Speed (km/h)' }
+                                }
+                            }
+                        }
+                    });
+
+                    // Initialize Maps for Each Instance
+                    initMap('map1', data1.city);
+                    initMap('map2', data2.city);
+                });
+        });
+
+        // Initialize the map
+        function initMap(elementId, city) {
+            const map = L.map(elementId).setView([51.505, -0.09], 13);  // Default position
+
+            // Fetch city coordinates (latitude and longitude)
+            fetch(`https://nominatim.openstreetmap.org/search?q=${city}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    const lat = data[0].lat;
+                    const lon = data[0].lon;
+
+                    map.setView([lat, lon], 13);
+
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+
+                    L.marker([lat, lon]).addTo(map)
+                        .bindPopup(`<b>${city}</b><br>Latitude: ${lat}<br>Longitude: ${lon}`)
+                        .openPopup();
+                });
+        }
+
+        // Function to Calculate Average Speed for each Weather Condition
+        function calculateAverageSpeedByWeather(weatherConditions, averageSpeeds) {
+            const weatherSpeedMap = {};
+
+            // Aggregate the speeds for each weather condition
+            for (let i = 0; i < weatherConditions.length; i++) {
+                const condition = weatherConditions[i];
+                const speed = averageSpeeds[i];
+
+                if (!weatherSpeedMap[condition]) {
+                    weatherSpeedMap[condition] = { totalSpeed: 0, count: 0 };
+                }
+
+                weatherSpeedMap[condition].totalSpeed += speed;
+                weatherSpeedMap[condition].count += 1;
+            }
+
+            // Calculate the average speed for each weather condition
+            const avgSpeedByWeather = {};
+            for (let condition in weatherSpeedMap) {
+                const { totalSpeed, count } = weatherSpeedMap[condition];
+                avgSpeedByWeather[condition] = totalSpeed / count;
+            }
+
+            return avgSpeedByWeather;
+        }
+    </script>
+
+</body>
+
+</html>
