@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Time Traffic Weather Visualization</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            width: 100%;
+            background-color: #6200ea;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: calc(100vh - 80px);
+            /* Header yüksekligini çikar */
+        }
+
+        .instance {
+            flex: 1;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .instance h2 {
+            margin-top: 0;
+            color: #6200ea;
+        }
+
+        .instance label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .instance select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .instance select:hover {
+            border-color: #6200ea;
+        }
+
+        .chart-container {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            /* Flexbox overflow sorununu çözmek için */
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .data-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .data-section {
+            flex: 1;
+            margin: 0 10px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-section h3 {
+            margin-top: 0;
+            color: #6200ea;
+        }
+
+        .data-section pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .car-marker {
+            background: transparent;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Real Time Route Analysis and Visualization</h1>
+    </div>
+
+    <div class="container">
+        <div class="instance" id="instance-1">
+            <h2>Instance 1</h2>
+            <label for="file-select-1">Select File:</label>
+            <select id="file-select-1">
+                <option value="">Select a file...</option>
+            </select>
+
+            <h2>Current Data</h2>
+            <div class="data-container">
+                <div class="data-section" id="weatherData-1">
+                    <h3>Weather Data</h3>
+                    <pre id="weatherOutput-1">Waiting for weather data...</pre>
+                </div>
+                <div class="data-section" id="trafficData-1">
+                    <h3>Traffic Data</h3>
+                    <pre id="trafficOutput-1">Waiting for traffic data...</pre>
+                </div>
+                <div class="data-section" id="carData-1">
+                    <h3>Car Data</h3>
+                    <pre id="carOutput-1">Waiting for car data...</pre>
+                </div>
+            </div>
+
+            <h3>Car Speed vs Speed Limit</h3>
+            <div class="chart-container">
+                <canvas id="chart-speed-limit-1"></canvas>
+            </div>
+            
+            <!-- Add this new chart container -->
+            <h3>TomTom Live Speed vs Calculated Speed</h3>
+            <div class="chart-container">
+                <canvas id="chart-traffic-speed-1"></canvas>
+            </div>
+
+            <h2>Initial Route</h2>
+            <div class="arrival-status" id="arrivalStatus-1">Status: In Transit</div>
+            <div id="map-1" class="chart-container"></div>
+        </div>
+
+        <div class="instance" id="instance-2">
+            <h2>Instance 2</h2>
+            <label for="file-select-2">Select File:</label>
+            <select id="file-select-2">
+                <option value="">Select a file...</option>
+            </select>
+
+            <h2>Current Data</h2>
+            <div class="data-container">
+                <div class="data-section" id="weatherData-2">
+                    <h3>Weather Data</h3>
+                    <pre id="weatherOutput-2">Waiting for weather data...</pre>
+                </div>
+                <div class="data-section" id="trafficData-2">
+                    <h3>Traffic Data</h3>
+                    <pre id="trafficOutput-2">Waiting for traffic data...</pre>
+                </div>
+                <div class="data-section" id="carData-2">
+                    <h3>Car Data</h3>
+                    <pre id="carOutput-2">Waiting for car data...</pre>
+                </div>
+            </div>
+
+            <h3>Car Speed vs Speed Limit</h3>
+            <div class="chart-container">
+                <canvas id="chart-speed-limit-2"></canvas>
+            </div>
+            
+            <!-- Add this new chart container -->
+            <h3>TomTom Live Speed vs Calculated Speed</h3>
+            <div class="chart-container">
+                <canvas id="chart-traffic-speed-2"></canvas>
+            </div>
+
+            <h2>Initial Route</h2>
+            <div class="arrival-status" id="arrivalStatus-1">Status: In Transit</div>
+            <div id="map-2" class="chart-container"></div>
+        </div>
+    </div>
+
+
+    <script>
+        // Initialize maps for both instances
+        const map1 = L.map('map-1').setView([48.136995, 11.576924], 13);
+        const map2 = L.map('map-2').setView([48.136995, 11.576924], 13);
+
+        // Add OpenStreetMap tiles to both maps
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map1);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map2);
+
+        // Function to populate dropdown menus
+        async function loadFiles(dropdownId) {
+            const baseUrl = 'https://lehre.bpm.in.tum.de/~ge27lol/Route-Analysis-Project/data/';
+            const response = await fetch(baseUrl);
+            const text = await response.text();
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(text, 'text/html');
+            const links = htmlDoc.querySelectorAll('a');
+
+            const dropdown = document.getElementById(dropdownId);
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && !href.startsWith('?')) {
+                    const option = document.createElement('option');
+                    option.value = baseUrl + href; // Dogru yolu olustur
+                    option.textContent = href;
+                    dropdown.appendChild(option);
+                }
+            });
+        }
+
+        // Function to extract the unique code from the filename
+        function extractUniqueCode(filename) {
+            const match = filename.match(/\d+/g); // Tüm sayilari al
+            return match ? match[match.length - 1] : null; // Sonuncusunu döndür
+        }
+
+        // Function to load initial route data and draw the route on the map
+        async function loadInitialRouteAndDrawMap(map, uniqueCode) {
+            const initialRouteUrl = `https://lehre.bpm.in.tum.de/~ge27lol/Route-Analysis-Project/data/initial_route_${uniqueCode}.json`;
+            try {
+                const response = await fetch(initialRouteUrl);
+                const jsonData = await response.json();
+
+                // Extract coordinates from the JSON data
+                const coordinates = jsonData.coordinates.map(coord => [coord[1], coord[0]]); // [lat, lon] format for Leaflet
+
+                // Draw the route on the map
+                L.polyline(coordinates, { color: '#6200ea' }).addTo(map);
+
+                // Fit the map to the bounds of the route
+                const bounds = L.latLngBounds(coordinates);
+                map.fitBounds(bounds);
+            } catch (error) {
+                console.error('Error loading initial route data:', error);
+            }
+        }
+
+const charts = {
+};
+
+        function createChart(canvasId, data) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            return new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.timestamps,
+                    datasets: [
+                        {
+                            label: 'Current Speed',
+                            data: data.current_speed,
+                            borderColor: '#6200ea',
+                            fill: false,
+                        },
+                        {
+                            label: 'Speed Limit',
+                            data: data.current_speed_limit.map(speed => speed === -1 ? null : speed), // Hide if -1
+                            borderColor: '#ff6384',
+                            borderDash: [5, 5], // Dashed line for speed limit
+                            fill: false,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Time'
+                            },
+                            ticks: {
+                                autoSkip: true,
+                                maxTicksLimit: 20 // X ekseninde maksimum 20 etiket göster
+                            }
+                        },
+                        y: {
+                            display: true,
+                            title: {
+                                display: true,
+                                text: 'Speed (km/h)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        annotation: {
+                            annotations: {
+                                noSpeedLimit: {
+                                    type: 'line',
+                                    yMin: -1,
+                                    yMax: -1,
+                                    borderColor: 'rgba(255, 99, 132, 0.5)',
+                                    borderWidth: 1,
+                                    borderDash: [5, 5],
+                                    label: {
+                                        content: 'No Speed Limit',
+                                        enabled: true,
+                                        position: 'end',
+                                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                                        color: '#ff6384',
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to update chart data
+        function updateChart(chartId, newData) {
+    if (charts[chartType][chartId]) {
+        const chart = charts[chartType][chartId];
+        
+        chart.data.labels.push(newData.timestamp);
+        
+        if (chartType === 'speedLimit') {
+            chart.data.datasets[0].data.push(newData.current_speed);
+            const updatedSpeedLimit = newData.current_speed_limit === -1 ? null : newData.current_speed_limit;
+            chart.data.datasets[1].data.push(updatedSpeedLimit);
+        } else { // trafficSpeed
+            chart.data.datasets[0].data.push(newData.current_speed);
+            chart.data.datasets[1].data.push(newData.traffic_speed);
+        }
+        
+        chart.update();
+    }
+        }
+        const carMarkers = {};
+
+        function updateCarPosition(instanceId, lat, lng) {
+            const map = instanceId === 1 ? map1 : map2;
+
+            // Remove previous marker if exists
+            if (carMarkers[instanceId]) {
+                map.removeLayer(carMarkers[instanceId]);
+            }
+
+            // Add new marker
+            carMarkers[instanceId] = L.marker([lat, lng], {
+                icon: L.icon({
+                    iconUrl: 'https://lehre.bpm.in.tum.de/~ge27lol/Route-Analysis-Project/car-icon.png',
+                    iconSize: [50, 50], // Adjust size
+                    iconAnchor: [25, 25]
+                })
+            }).addTo(map);
+
+            // Center map on new position
+            map.setView([lat, lng], 13);
+        }
+
+        // Function to update the SSE connection with the instance_id
+        function updateSSEConnection(instanceId, uniqueCode) {
+            // Close the existing EventSource connection (if any)
+            if (window[`eventSource${instanceId}`]) {
+                window[`eventSource${instanceId}`].close();
+            }
+
+            // Create a new EventSource with the instance_id as a query parameter
+            const sseUrl = `https://lehre.bpm.in.tum.de/ports/12879/sse?instance_id=${uniqueCode}`;
+            window[`eventSource${instanceId}`] = new EventSource(sseUrl);
+
+            window[`eventSource${instanceId}`].onmessage = function (event) {
+                const data = JSON.parse(event.data);
+
+                // Update weather data
+                const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
+                if (data["weather"]) {
+                    weatherOutput.textContent = JSON.stringify(data["weather"], null, 2);
+                }
+
+                // Update traffic data
+                const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
+                if (data["traffic"]) {
+                    trafficOutput.textContent = JSON.stringify(data["traffic"], null, 2);
+                }
+
+
+                const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
+                if (data["car"].arrived) {
+                    arrivalStatus.textContent = "Status: ARRIVED";
+                    arrivalStatus.style.color = "green";
+                    arrivalStatus.style.fontWeight = "bold";
+                }
+                // Update car data
+                const carOutput = document.getElementById(`carOutput-${instanceId}`);
+                if (data["car"]) {
+                    carOutput.textContent = JSON.stringify(data["car"], null, 2);
+                    // Only update chart if car hasn't arrived
+                    if (!data["car"].arrived) {
+                        const newChartData = {
+                            timestamp: data["car"].timestamp,
+                            current_speed: data["car"].current_speed,
+                            current_speed_limit: data["car"].current_speed_limit
+                        };
+                        updateChart(`chart-${instanceId}`, newChartData);
+                    } else {
+                        console.log(`Car ${instanceId} has arrived - stopping chart updates`);
+                        // Optional: Show "Arrived" status on chart
+                        if (charts[`chart-${instanceId}`]) {
+                            const chart = charts[`chart-${instanceId}`];
+                            chart.options.plugins.annotation.annotations = {
+                                arrived: {
+                                    type: 'label',
+                                    content: 'ARRIVED',
+                                    position: 'center',
+                                    enabled: true,
+                                    color: '#ff0000',
+                                    font: {
+                                        size: 20,
+                                        weight: 'bold'
+                                    }
+                                }
+                            };
+                            chart.update();
+                        }
+                    }
+                    updateCarPosition(instanceId, data["car"].current_latitude, data["car"].current_longitude);
+                }
+            };
+
+            // Handle errors
+            window[`eventSource${instanceId}`].onerror = function (error) {
+                console.error(`Error occurred for instance ${instanceId}:`, error);
+                const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
+                const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
+                const carOutput = document.getElementById(`carOutput-${instanceId}`);
+
+                weatherOutput.textContent = 'Error occurred while fetching weather data.';
+                trafficOutput.textContent = 'Error occurred while fetching traffic data.';
+                carOutput.textContent = 'Error occurred while fetching car data.';
+            };
+        }
+
+        // Function to load JSON data and update the chart and map
+        async function loadDataAndUpdateChart(dropdownId, chartId, map, instanceId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.addEventListener('change', async function () {
+                const fileUrl = this.value;
+                if (!fileUrl) return;
+
+                try {
+                    const response = await fetch(fileUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const jsonData = await response.json();
+
+                    // Extract timestamps, current speed, and speed limit
+                    const timestamps = jsonData.car.map(entry => entry.timestamp);
+                    const currentSpeed = jsonData.car.map(entry => entry.current_speed);
+                    const currentSpeedLimit = jsonData.car.map(entry => entry.current_speed_limit);
+
+                    const chartData = {
+                        timestamps: timestamps,
+                        current_speed: currentSpeed,
+                        current_speed_limit: currentSpeedLimit
+                    };
+
+                    // Destroy existing chart if it exists
+                    if (charts[chartId] && typeof charts[chartId].destroy === 'function') {
+                        charts[chartId].destroy();
+                    }
+
+                    // Create new chart and store it in the global charts object
+                    charts[chartId] = createChart(chartId, chartData);
+
+                    // Extract unique code (instance_id) from the filename
+                    const uniqueCode = extractUniqueCode(fileUrl);
+                    if (uniqueCode) {
+                        // Load and draw the initial route
+                        await loadInitialRouteAndDrawMap(map, uniqueCode);
+
+                        // Update the SSE URL with the instance_id
+                        updateSSEConnection(instanceId, uniqueCode);
+                    }
+                } catch (error) {
+                    console.error('Error loading JSON data:', error);
+                }
+            });
+        }
+
+        // Populate dropdowns and set up chart updates when the page loads
+        window.onload = function () {
+            loadFiles('file-select-1');
+            loadFiles('file-select-2');
+
+            // Initialize charts and SSE connections for both instances
+            loadDataAndUpdateChart('file-select-1', 'chart-1', map1, 1);
+            loadDataAndUpdateChart('file-select-2', 'chart-2', map2, 2);
+        };
+    </script>
+
+</body>
+
+</html>
