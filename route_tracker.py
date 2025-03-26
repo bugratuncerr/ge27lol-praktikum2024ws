@@ -157,7 +157,7 @@ class RouteTracker:
                         self.car.set_arrived(True)
                         break
 
-            time.sleep(1)  # Update interval
+            time.sleep(30)  # Update interval
 
         print(f"Tracking stopped for car {self.car.instance_id}")
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,136 +11,7 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f9;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .header {
-            width: 100%;
-            background-color: #6200ea;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .container {
-            display: flex;
-            width: 100%;
-            height: calc(100vh - 80px);
-        }
-
-        .instance {
-            flex: 1;
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .instance h2 {
-            margin-top: 0;
-            color: #6200ea;
-        }
-
-        .instance label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .instance select {
-            width: 100%;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            font-size: 16px;
-            background-color: #f9f9f9;
-            cursor: pointer;
-            margin-bottom: 20px;
-        }
-
-        .instance select:hover {
-            border-color: #6200ea;
-        }
-
-        .chart-container {
-            width: 100%;
-            flex: 1;
-            min-height: 0;
-        }
-
-        #map {
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-        }
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
-        .data-container {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .data-section {
-            flex: 1;
-            margin: 0 10px;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .data-section h3 {
-            margin-top: 0;
-            color: #6200ea;
-        }
-
-        .data-section pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-            background-color: #fff;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            overflow-x: auto;
-        }
-
-        .arrival-status {
-            padding: 8px;
-            margin: 10px 0;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .car-marker {
-            background: transparent;
-            border: none;
-        }
-    </style>
+    <link rel="stylesheet" href="/ports/12879/static/css/style.css">
 </head>
 
 <body>
@@ -175,7 +47,7 @@
             <div class="chart-container">
                 <canvas id="chart-speed-limit-1"></canvas>
             </div>
-            
+
             <h3>TomTom Live Speed vs Calculated Speed</h3>
             <div class="chart-container">
                 <canvas id="chart-traffic-speed-1"></canvas>
@@ -213,7 +85,7 @@
             <div class="chart-container">
                 <canvas id="chart-speed-limit-2"></canvas>
             </div>
-            
+
             <h3>TomTom Live Speed vs Calculated Speed</h3>
             <div class="chart-container">
                 <canvas id="chart-traffic-speed-2"></canvas>
@@ -245,7 +117,7 @@
         // Function to update car position on map
         function updateCarPosition(instanceId, lat, lng) {
             const map = instanceId === 1 ? map1 : map2;
-            
+
             // Remove previous marker if exists
             if (carMarkers[instanceId]) {
                 map.removeLayer(carMarkers[instanceId]);
@@ -253,8 +125,8 @@
 
             // Create custom car icon
             const carIcon = L.icon({
-                iconUrl: 'https://lehre.bpm.in.tum.de/~ge27lol/Route-Analysis-Project/car-icon.png',
-                iconSize: [32, 32],
+                iconUrl: '/ports/12879/static/images/car-icon.png',
+                iconSize: [40, 40],
                 iconAnchor: [16, 16]
             });
 
@@ -268,7 +140,7 @@
             if (carRoutes[instanceId]) {
                 carRoutes[instanceId].addLatLng([lat, lng]);
             } else {
-                carRoutes[instanceId] = L.polyline([[lat, lng]], {color: 'red'}).addTo(map);
+                carRoutes[instanceId] = L.polyline([[lat, lng]], { color: 'red' }).addTo(map);
             }
 
             // Center map on new position
@@ -277,7 +149,7 @@
 
         // Function to populate dropdown menus
         async function loadFiles(dropdownId) {
-            const baseUrl = 'https://lehre.bpm.in.tum.de/~ge27lol/Route-Analysis-Project/data/';
+            const baseUrl = '/ports/12879/data/';
             const response = await fetch(baseUrl);
             const text = await response.text();
             const parser = new DOMParser();
@@ -289,7 +161,7 @@
                 const href = link.getAttribute('href');
                 if (href && !href.startsWith('?')) {
                     const option = document.createElement('option');
-                    option.value = baseUrl + href;
+                    option.value = '/ports/12879' + href;
                     option.textContent = href;
                     dropdown.appendChild(option);
                 }
@@ -304,28 +176,33 @@
 
         // Function to load initial route data and draw the route on the map
         async function loadInitialRouteAndDrawMap(map, uniqueCode, instanceId) {
-            const initialRouteUrl = `https://lehre.bpm.in.tum.de/~ge27lol/Route-Analysis-Project/data/initial_route_${uniqueCode}.json`;
+            const initialRouteUrl = `/ports/12879/data/initial_route_${uniqueCode}.json`;
             try {
                 const response = await fetch(initialRouteUrl);
                 const jsonData = await response.json();
 
-                // Clear existing route if any
+                // Clear ALL existing map layers except base tiles
+                map.eachLayer(layer => {
+                    if (layer instanceof L.Polyline || layer instanceof L.Marker) {
+                        map.removeLayer(layer);
+                    }
+                });
+
+                // Clear references
+                if (carMarkers[instanceId]) {
+                    delete carMarkers[instanceId];
+                }
                 if (carRoutes[instanceId]) {
-                    map.removeLayer(carRoutes[instanceId]);
                     delete carRoutes[instanceId];
                 }
 
-                // Extract coordinates from the JSON data
+                // Extract coordinates and draw new route
                 const coordinates = jsonData.coordinates.map(coord => [coord[1], coord[0]]);
-
-                // Draw the route on the map
                 L.polyline(coordinates, { color: '#6200ea' }).addTo(map);
-
-                // Fit the map to the bounds of the route
                 map.fitBounds(L.latLngBounds(coordinates));
 
-                // Initialize empty route for car tracking
-                carRoutes[instanceId] = L.polyline([], {color: 'red'}).addTo(map);
+                // Initialize new empty route for car tracking
+                carRoutes[instanceId] = L.polyline([], { color: 'red' }).addTo(map);
             } catch (error) {
                 console.error('Error loading initial route data:', error);
             }
@@ -346,7 +223,7 @@
         // Function to create a chart
         function createChart(chartType, canvasId, initialData = null) {
             const ctx = document.getElementById(canvasId).getContext('2d');
-            
+
             // Destroy existing chart if it exists
             if (charts[chartType][canvasId]) {
                 charts[chartType][canvasId].destroy();
@@ -412,25 +289,72 @@
             return charts[chartType][canvasId];
         }
 
-        // Function to update chart data
         function updateChart(chartType, chartId, newData) {
             if (charts[chartType][chartId]) {
                 const chart = charts[chartType][chartId];
-                
+
+                // Add new data point
                 chart.data.labels.push(newData.timestamp);
-                
+
                 if (chartType === 'speedLimit') {
                     chart.data.datasets[0].data.push(newData.current_speed);
                     const updatedSpeedLimit = newData.current_speed_limit === -1 ? null : newData.current_speed_limit;
                     chart.data.datasets[1].data.push(updatedSpeedLimit);
                 } else { // trafficSpeed
                     chart.data.datasets[0].data.push(newData.current_speed);
-                    chart.data.datasets[1].data.push(newData.traffic_speed);
+                    // Handle both array and single value for traffic speed
+                    const trafficSpeed = Array.isArray(newData.traffic_speed) ?
+                        (newData.traffic_speed.length > 0 ? newData.traffic_speed[0] : null) :
+                        newData.traffic_speed;
+                    chart.data.datasets[1].data.push(trafficSpeed);
                 }
-                
+
+                // Limit the number of data points to keep the chart readable
+                if (chart.data.labels.length > 50) {
+                    chart.data.labels.shift();
+                    chart.data.datasets.forEach(dataset => {
+                        dataset.data.shift();
+                    });
+                }
+
                 chart.update();
             }
         }
+
+
+        // Helper function to find closest traffic data by timestamp
+        function findClosestTrafficData(carTime, trafficData) {
+            if (!trafficData || trafficData.length === 0) return null;
+
+            const carTimeParts = carTime.split(':');
+            const carSeconds = parseInt(carTimeParts[0]) * 3600 +
+                parseInt(carTimeParts[1]) * 60 +
+                parseInt(carTimeParts[2]);
+
+            let closest = null;
+            let smallestDiff = Infinity;
+
+            trafficData.forEach(traffic => {
+                const trafficTime = traffic.timestamps.split(' ')[1];
+                const trafficTimeParts = trafficTime.split(':');
+                const trafficSeconds = parseInt(trafficTimeParts[0]) * 3600 +
+                    parseInt(trafficTimeParts[1]) * 60 +
+                    parseInt(trafficTimeParts[2]);
+
+                const diff = Math.abs(trafficSeconds - carSeconds);
+                if (diff < smallestDiff) {
+                    smallestDiff = diff;
+                    closest = traffic;
+                }
+            });
+
+            return closest;
+        }
+
+        const lastData = {
+            1: { car: null, traffic: null, weather: null },
+            2: { car: null, traffic: null, weather: null }
+        };
 
         // Function to update the SSE connection with the instance_id
         function updateSSEConnection(instanceId, uniqueCode) {
@@ -443,12 +367,34 @@
             const sseUrl = `https://lehre.bpm.in.tum.de/ports/12879/sse?instance_id=${uniqueCode}`;
             window[`eventSource${instanceId}`] = new EventSource(sseUrl);
 
-            // Store last traffic data for comparison chart
-            const lastTrafficData = { speed: null, timestamp: null };
-
-            window[`eventSource${instanceId}`].onmessage = function(event) {
+            window[`eventSource${instanceId}`].onmessage = function (event) {
                 const data = JSON.parse(event.data);
-                const timestamp = new Date().toLocaleTimeString();
+                const now = new Date();
+                const timestamp = now.toLocaleString('de-DE', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Europe/Berlin'
+                }).replace(',', '');
+
+
+                const dataChanged =
+                    JSON.stringify(data.car) !== JSON.stringify(lastData[instanceId].car) ||
+                    JSON.stringify(data.traffic) !== JSON.stringify(lastData[instanceId].traffic) ||
+                    JSON.stringify(data.weather) !== JSON.stringify(lastData[instanceId].weather);
+
+                if (!dataChanged) {
+                    console.log(`Instance ${instanceId}: Data not changed, skipping update`);
+                    return;
+                }
+
+                lastData[instanceId] = {
+                    car: { ...data.car },
+                    traffic: { ...data.traffic },
+                    weather: { ...data.weather }
+                };
 
                 // Update weather data
                 const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
@@ -460,20 +406,13 @@
                 const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
                 if (data["traffic"]) {
                     trafficOutput.textContent = JSON.stringify(data["traffic"], null, 2);
-                    
-                    // Extract traffic speed (use first live speed if available, or direct speed value)
-                    const trafficSpeed = data["traffic"].live_speeds?.[0] || data["traffic"].speed;
-                    if (trafficSpeed !== undefined) {
-                        lastTrafficData.speed = trafficSpeed;
-                        lastTrafficData.timestamp = timestamp;
-                    }
                 }
 
                 // Update car data and position
                 const carOutput = document.getElementById(`carOutput-${instanceId}`);
                 if (data["car"]) {
                     carOutput.textContent = JSON.stringify(data["car"], null, 2);
-                    
+
                     // Update arrival status
                     const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
                     if (data["car"].arrived) {
@@ -489,8 +428,8 @@
                     // Update car position on map
                     if (data["car"].current_latitude && data["car"].current_longitude) {
                         updateCarPosition(
-                            instanceId, 
-                            data["car"].current_latitude, 
+                            instanceId,
+                            data["car"].current_latitude,
                             data["car"].current_longitude
                         );
                     }
@@ -505,7 +444,7 @@
                         });
 
                         // Update traffic comparison chart if we have traffic data
-                        if (lastTrafficData.speed !== null) {
+                        if (data["traffic"]) {
                             updateChart('trafficSpeed', `chart-traffic-speed-${instanceId}`, {
                                 timestamp: timestamp,
                                 current_speed: data["car"].current_speed,
@@ -517,7 +456,7 @@
             };
 
             // Handle errors
-            window[`eventSource${instanceId}`].onerror = function(error) {
+            window[`eventSource${instanceId}`].onerror = function (error) {
                 console.error(`Error occurred for instance ${instanceId}:`, error);
                 const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
                 const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
@@ -528,11 +467,31 @@
                 carOutput.textContent = 'Error occurred while fetching car data.';
             };
         }
+        function findClosestCarData(trafficTime, carData) {
+            if (!carData || carData.length === 0) return null;
 
-        // Function to load JSON data and update the charts and map
+            const trafficTimeValue = trafficTime.getTime();
+
+            let closest = null;
+            let smallestDiff = Infinity;
+
+            carData.forEach(car => {
+                const carTime = new Date(car.timestamp).getTime();
+                const diff = Math.abs(carTime - trafficTimeValue);
+                if (diff < smallestDiff) {
+                    smallestDiff = diff;
+                    closest = car;
+                }
+            });
+
+
+            return closest;
+        }
         async function loadDataAndUpdateChart(dropdownId, instanceId) {
             const dropdown = document.getElementById(dropdownId);
-            dropdown.addEventListener('change', async function() {
+            dropdown.addEventListener('change', async function () {
+                createChart('speedLimit', `chart-speed-limit-${instanceId}`);
+                createChart('trafficSpeed', `chart-traffic-speed-${instanceId}`);
                 const fileUrl = this.value;
                 if (!fileUrl) return;
 
@@ -543,22 +502,74 @@
                     }
                     const jsonData = await response.json();
 
-                    // Extract data for charts
-                    const timestamps = jsonData.car.map(entry => entry.timestamp);
-                    const currentSpeed = jsonData.car.map(entry => entry.current_speed);
-                    const currentSpeedLimit = jsonData.car.map(entry => entry.current_speed_limit);
+                    // Use traffic timestamps as the primary time reference
+                    const trafficTimestamps = jsonData.traffic.map(traffic => {
+                        const date = new Date(traffic.timestamps);
+                        return date.toLocaleString('de-DE', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            timeZone: 'Europe/Berlin'
+                        }).replace(',', '');
+                    });
 
-                    // Initialize charts
+                    // Process car data to align with traffic timestamps
+                    const carSpeeds = [];
+                    const carSpeedLimits = [];
+                    const carDataMap = {};
+
+                    // Create a map of car data by timestamp
+                    jsonData.car.forEach(car => {
+                        const date = new Date(car.timestamp);
+                        const timeKey = date.toLocaleString('de-DE', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            timeZone: 'Europe/Berlin'
+                        });
+                        carDataMap[timeKey] = {
+                            speed: car.current_speed,
+                            limit: car.current_speed_limit
+                        };
+                    });
+
+                    // Match car speeds with traffic timestamps
+                    jsonData.traffic.forEach(traffic => {
+                        const trafficTime = new Date(traffic.timestamps);
+                        const timeKey = trafficTime.toLocaleString('de-DE', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit',
+                            timeZone: 'Europe/Berlin'
+                        });
+
+                        if (carDataMap[timeKey]) {
+                            carSpeeds.push(carDataMap[timeKey].speed);
+                            carSpeedLimits.push(carDataMap[timeKey].limit);
+                        } else {
+                            // If no exact match, find the closest car data
+                            const closestCar = findClosestCarData(trafficTime, jsonData.car);
+                            carSpeeds.push(closestCar ? closestCar.current_speed : null);
+                            carSpeedLimits.push(closestCar ? closestCar.current_speed_limit : null);
+                        }
+                    });
+
+                    // Get traffic speeds
+                    const trafficSpeeds = jsonData.traffic.map(traffic => traffic.live_speeds);
+
+                    // Initialize both charts with traffic timestamps
                     createChart('speedLimit', `chart-speed-limit-${instanceId}`, {
-                        timestamps: timestamps,
-                        current_speed: currentSpeed,
-                        current_speed_limit: currentSpeedLimit
+                        timestamps: trafficTimestamps,
+                        current_speed: carSpeeds,
+                        current_speed_limit: carSpeedLimits
                     });
 
                     createChart('trafficSpeed', `chart-traffic-speed-${instanceId}`, {
-                        timestamps: timestamps,
-                        current_speed: currentSpeed,
-                        traffic_speed: currentSpeed // Will be updated with real traffic data via SSE
+                        timestamps: trafficTimestamps,
+                        current_speed: carSpeeds,
+                        traffic_speed: trafficSpeeds
                     });
 
                     // Extract unique code (instance_id) from the filename
@@ -566,8 +577,8 @@
                     if (uniqueCode) {
                         // Load and draw the initial route
                         await loadInitialRouteAndDrawMap(
-                            instanceId === 1 ? map1 : map2, 
-                            uniqueCode, 
+                            instanceId === 1 ? map1 : map2,
+                            uniqueCode,
                             instanceId
                         );
 
@@ -581,7 +592,17 @@
         }
 
         // Initialize everything when page loads
-        window.onload = function() {
+        window.onload = function () {
+            if (window.eventSource1) window.eventSource1.close();
+            if (window.eventSource2) window.eventSource2.close();
+
+            // Clear existing chart data
+            Object.keys(charts.speedLimit).forEach(id => {
+                if (charts.speedLimit[id]) charts.speedLimit[id].destroy();
+            });
+            Object.keys(charts.trafficSpeed).forEach(id => {
+                if (charts.trafficSpeed[id]) charts.trafficSpeed[id].destroy();
+            });
             loadFiles('file-select-1');
             loadFiles('file-select-2');
 
@@ -597,4 +618,5 @@
         };
     </script>
 </body>
+
 </html>
