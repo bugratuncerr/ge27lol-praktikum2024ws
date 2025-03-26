@@ -68,6 +68,33 @@ async function loadFiles(dropdownId) {
     });
 }
 
+
+function updateThresholdInfo(instanceId, currentThreshold) {
+    let intensity = "";
+    let reduction = "";
+    
+    if (currentThreshold >= 0 && currentThreshold <= 10) {
+        intensity = "Minimal";
+        reduction = "0-10%";
+    } else if (currentThreshold >= 11 && currentThreshold <= 25) {
+        intensity = "Moderate";
+        reduction = "11-30%";
+    } else if (currentThreshold >= 26 && currentThreshold <= 40) {
+        intensity = "High";
+        reduction = "31-50%";
+    } else if (currentThreshold >= 41 && currentThreshold <= 50) {
+        intensity = "Maximum";
+        reduction = "51-60%";
+    } else {
+        intensity = "Unknown";
+        reduction = "Unknown";
+    }
+    
+    document.getElementById(`currentThreshold-${instanceId}`).textContent = currentThreshold;
+    document.getElementById(`thresholdIntensity-${instanceId}`).textContent = intensity;
+    document.getElementById(`speedReduction-${instanceId}`).textContent = reduction;
+}
+
 // Function to extract the unique code from the filename
 function extractUniqueCode(filename) {
     const match = filename.match(/\d+/g);
@@ -323,7 +350,9 @@ function updateSSEConnection(instanceId, uniqueCode) {
         const carOutput = document.getElementById(`carOutput-${instanceId}`);
         if (data["car"]) {
             carOutput.textContent = JSON.stringify(data["car"], null, 2);
-
+            if (data["car"].current_threshold !== undefined) {
+                updateThresholdInfo(instanceId, data["car"].current_threshold);
+            }
             // Update arrival status
             const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
             if (data["car"].arrived) {
