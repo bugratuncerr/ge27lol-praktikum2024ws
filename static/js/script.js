@@ -59,10 +59,10 @@ async function loadFiles(dropdownId) {
     const dropdown = document.getElementById(dropdownId);
     links.forEach(link => {
         const href = link.getAttribute('href');
-        if (href && !href.startsWith('?')) {
+        if (href && href.startsWith('/data/historical_data_')) {
             const option = document.createElement('option');
             option.value = '/ports/12879' + href;
-            option.textContent = href;
+            option.textContent = href.replace('/data/historical_data_', ''); // Remove "/data/" from display
             dropdown.appendChild(option);
         }
     });
@@ -203,7 +203,7 @@ function updateChart(chartType, chartId, newData) {
         chart.data.labels.push(newData.timestamp);
 
 
-        
+
         if (chartType === 'speedLimit') {
             chart.data.datasets[0].data.push(newData.current_speed);
 
