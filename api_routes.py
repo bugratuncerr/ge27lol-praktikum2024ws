@@ -204,7 +204,11 @@ def record():
                 trackers[instance_id].pause_updates()
             elif state == 'running':
                 trackers[instance_id].resume_updates()
-            #Finished state
+            elif state == 'finished':
+                # Clean up the tracker for this instance
+                trackers[instance_id]._stop_tracking_thread()
+                trackers.pop(instance_id, None)  # Remove the tracker from the dictionary
+                cars.pop(instance_id, None)  # Remove the tracker from the dictionary
 
 
     filtered_data = {key: value for key, value in contents['content'].items() if 'value' in key}
