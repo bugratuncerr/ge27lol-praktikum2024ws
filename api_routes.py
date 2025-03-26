@@ -69,25 +69,36 @@ def update_car_lights():
     try:
         data = request.forms.decode()
         instance_id = int(data.get("instance_id"))
-        if cars[instance_id].lights == bool(data.get("car_lights", cars[instance_id].lights)):
+        new_car_lights = data.get("car_lights")
+
+        new_car_lights = new_car_lights in ["true", "True", "1"] if new_car_lights is not None else cars[instance_id].lights
+
+        if cars[instance_id].lights == new_car_lights:
             return HTTPResponse(status=200, body=json.dumps({'message': 'Car lights remains the same', 'car': cars[instance_id].get_state()}), headers={'content-type': 'application/json'})
         else:
-            cars[instance_id].update_lights(bool(data.get("car_lights", cars[instance_id].lights)))
+            cars[instance_id].update_lights(new_car_lights)
             return HTTPResponse(status=200, body=json.dumps({'message': 'Car lights updated successfully.', 'car': cars[instance_id].get_state()}), headers={'content-type': 'application/json'})
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
+
 
 def update_car_fog_lights():
     try:
         data = request.forms.decode()
         instance_id = int(data.get("instance_id"))
-        if cars[instance_id].fog_lights == bool(data.get("car_fog_lights", cars[instance_id].fog_lights)):
+        new_fog_lights = data.get("car_fog_lights")
+
+        # Convert to boolean explicitly
+        new_fog_lights = new_fog_lights in ["true", "True", "1"] if new_fog_lights is not None else cars[instance_id].fog_lights
+
+        if cars[instance_id].fog_lights == new_fog_lights:
             return HTTPResponse(status=200, body=json.dumps({'message': 'Car fog lights remains the same', 'car': cars[instance_id].get_state()}), headers={'content-type': 'application/json'})
         else:
-            cars[instance_id].update_fog_lights(bool(data.get("car_fog_lights", cars[instance_id].fog_lights)))
+            cars[instance_id].update_fog_lights(new_fog_lights)
             return HTTPResponse(status=200, body=json.dumps({'message': 'Car fog lights updated successfully.', 'car': cars[instance_id].get_state()}), headers={'content-type': 'application/json'})
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
+
 
 def get_car_state():
     try:
