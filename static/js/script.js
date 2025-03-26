@@ -69,30 +69,42 @@ async function loadFiles(dropdownId) {
 }
 
 
+function calculateExactReduction(threshold) {
+    // Cap threshold at 50 first
+    const cappedThreshold = Math.min(threshold, 50);
+
+    // Calculate exact reduction percentage
+    let reduction;
+    if (cappedThreshold <= 10) {
+        reduction = cappedThreshold * 1.0;
+    } else if (cappedThreshold <= 30) {
+        reduction = 10 + (cappedThreshold - 10) * 1.5;
+    } else {
+        reduction = 40 + (cappedThreshold - 30) * 1.0;
+    }
+    // Convert to percentage (0-100 scale)
+    return Math.min(reduction, 60); // Cap at 60% as maximum reduction
+}
+
 function updateThresholdInfo(instanceId, currentThreshold) {
+    const exactReduction = calculateExactReduction(currentThreshold);
+
     let intensity = "";
-    let reduction = "";
-    
     if (currentThreshold >= 0 && currentThreshold <= 10) {
         intensity = "Minimal";
-        reduction = "0-10%";
-    } else if (currentThreshold >= 11 && currentThreshold <= 25) {
+    } else if (currentThreshold <= 25) {
         intensity = "Moderate";
-        reduction = "11-30%";
-    } else if (currentThreshold >= 26 && currentThreshold <= 40) {
+    } else if (currentThreshold <= 40) {
         intensity = "High";
-        reduction = "31-50%";
-    } else if (currentThreshold >= 41 && currentThreshold <= 50) {
+    } else if (currentThreshold <= 50) {
         intensity = "Maximum";
-        reduction = "51-60%";
     } else {
         intensity = "Unknown";
-        reduction = "Unknown";
     }
-    
+
     document.getElementById(`currentThreshold-${instanceId}`).textContent = currentThreshold;
     document.getElementById(`thresholdIntensity-${instanceId}`).textContent = intensity;
-    document.getElementById(`speedReduction-${instanceId}`).textContent = reduction;
+    document.getElementById(`speedReduction-${instanceId}`).textContent = `${exactReduction.toFixed(1)}%`;
 }
 
 // Function to extract the unique code from the filename
@@ -229,16 +241,10 @@ function updateChart(chartType, chartId, newData) {
         // Add new data point
         chart.data.labels.push(newData.timestamp);
 
-
-
         if (chartType === 'speedLimit') {
             chart.data.datasets[0].data.push(newData.current_speed);
-
-            // Replace -1 with 140 for speed limit
             const updatedSpeedLimit = newData.current_speed_limit === -1 ? 140 : newData.current_speed_limit;
             chart.data.datasets[1].data.push(updatedSpeedLimit);
-
-            // Add threshold value from car data
             chart.data.datasets[2].data.push(newData.current_threshold);
         } else { // trafficSpeed
             chart.data.datasets[0].data.push(newData.current_speed);
@@ -260,42 +266,16 @@ function updateChart(chartType, chartId, newData) {
     }
 }
 
-
-// Helper function to find closest traffic data by timestamp
-function findClosestTrafficData(carTime, trafficData) {
-    if (!trafficData || trafficData.length === 0) return null;
-
-    const carTimeParts = carTime.split(':');
-    const carSeconds = parseInt(carTimeParts[0]) * 3600 +
-        parseInt(carTimeParts[1]) * 60 +
-        parseInt(carTimeParts[2]);
-
-    let closest = null;
-    let smallestDiff = Infinity;
-
-    trafficData.forEach(traffic => {
-        const trafficTime = traffic.timestamps.split(' ')[1];
-        const trafficTimeParts = trafficTime.split(':');
-        const trafficSeconds = parseInt(trafficTimeParts[0]) * 3600 +
-            parseInt(trafficTimeParts[1]) * 60 +
-            parseInt(trafficTimeParts[2]);
-
-        const diff = Math.abs(trafficSeconds - carSeconds);
-        if (diff < smallestDiff) {
-            smallestDiff = diff;
-            closest = traffic;
-        }
-    });
-
-    return closest;
-}
-
 const lastData = {
     1: { car: null, traffic: null, weather: null },
     2: { car: null, traffic: null, weather: null }
 };
 
-// Function to update the SSE connection with the instance_id
+const lastCarPositions = {
+    1: { lat: null, lng: null },
+    2: { lat: null, lng: null }
+};
+
 function updateSSEConnection(instanceId, uniqueCode) {
     // Close the existing EventSource connection (if any)
     if (window[`eventSource${instanceId}`]) {
@@ -318,41 +298,38 @@ function updateSSEConnection(instanceId, uniqueCode) {
             timeZone: 'Europe/Berlin'
         }).replace(',', '');
 
-        const dataChanged =
-            JSON.stringify(data.car) !== JSON.stringify(lastData[instanceId].car) ||
-            JSON.stringify(data.traffic) !== JSON.stringify(lastData[instanceId].traffic) ||
-            JSON.stringify(data.weather) !== JSON.stringify(lastData[instanceId].weather);
-
-        if (!dataChanged) {
-            console.log(`Instance ${instanceId}: Data not changed, skipping update`);
-            return;
-        }
-
-        lastData[instanceId] = {
-            car: { ...data.car },
-            traffic: { ...data.traffic },
-            weather: { ...data.weather }
-        };
-
         // Update weather data
         const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
         if (data["weather"]) {
-            weatherOutput.textContent = JSON.stringify(data["weather"], null, 2);
+            weatherOutput.textContent = `Temperature: ${data.weather.temperatures}\u00B0C\n` +
+                `Condition: ${data.weather.weather_conditions}\n` +
+                `Visibility: ${data.weather.visibility} km\n` +
+                `Location: ${data.weather.location}`
         }
 
         // Update traffic data
         const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
         if (data["traffic"]) {
-            trafficOutput.textContent = JSON.stringify(data["traffic"], null, 2);
+            trafficOutput.textContent = `Live Speed: ${data.traffic.live_speeds} km/h\n` +
+                `Free Flow: ${data.traffic.free_flow_speeds} km/h\n` +
+                `Confidence: ${(data.traffic.confidence * 100).toFixed(1)}%`;
         }
 
         // Update car data and position
         const carOutput = document.getElementById(`carOutput-${instanceId}`);
         if (data["car"]) {
-            carOutput.textContent = JSON.stringify(data["car"], null, 2);
+            carOutput.innerHTML = [
+                `<div class="car-data-line">Speed: <strong>${data.car.current_speed} km/h</strong></div>`,
+                `<div class="car-data-line">Limit: <strong>${data.car.current_speed_limit === -1 ? 'None' : data.car.current_speed_limit + ' km/h'}</strong></div>`,
+                `<div class="car-data-line">Threshold: <strong>${data.car.current_threshold}</strong></div>`,
+                `<div class="car-data-line">Headlights: <span class="light-status ${data.car.lights ? 'on' : 'off'}">${data.car.lights ? 'ON' : 'OFF'}</span></div>`,
+                `<div class="car-data-line">Fog Lights: <span class="light-status ${data.car.fog_lights ? 'on' : 'off'}">${data.car.fog_lights ? 'ON' : 'OFF'}</span></div>`
+            ].join('');
+
             if (data["car"].current_threshold !== undefined) {
                 updateThresholdInfo(instanceId, data["car"].current_threshold);
             }
+
             // Update arrival status
             const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
             if (data["car"].arrived) {
@@ -375,28 +352,42 @@ function updateSSEConnection(instanceId, uniqueCode) {
             }
 
             // Update charts if car hasn't arrived
-            if (!data["car"].arrived) {
-                // Update speed limit chart
-                updateChart('speedLimit', `chart-speed-limit-${instanceId}`, {
-                    timestamp: timestamp,
-                    current_speed: data["car"].current_speed,
-                    current_speed_limit: data["car"].current_speed_limit,
-                    current_threshold: data["car"].current_threshold
-                });
+            // 1. Car hasn't arrived AND
+            // 2. Position has changed from last known position OR this is the first position
+            if (data["car"] && !data["car"].arrived) {
+                const currentLat = data["car"].current_latitude;
+                const currentLng = data["car"].current_longitude;
+                const lastPos = lastCarPositions[instanceId];
 
-                // Update traffic comparison chart if we have traffic data
-                if (data["traffic"]) {
-                    updateChart('trafficSpeed', `chart-traffic-speed-${instanceId}`, {
+                // Check if position has changed (or if it's the first position)
+                if (currentLat !== lastPos.lat || currentLng !== lastPos.lng) {
+                    // Update speed limit chart
+                    updateChart('speedLimit', `chart-speed-limit-${instanceId}`, {
                         timestamp: timestamp,
                         current_speed: data["car"].current_speed,
-                        traffic_speed: data["traffic"].live_speeds
+                        current_speed_limit: data["car"].current_speed_limit,
+                        current_threshold: data["car"].current_threshold
                     });
+
+                    // Update traffic comparison chart if we have traffic data
+                    if (data["traffic"]) {
+                        updateChart('trafficSpeed', `chart-traffic-speed-${instanceId}`, {
+                            timestamp: timestamp,
+                            current_speed: data["car"].current_speed,
+                            traffic_speed: data["traffic"].live_speeds
+                        });
+                    }
+
+                    // Update last known position
+                    lastCarPositions[instanceId] = {
+                        lat: currentLat,
+                        lng: currentLng
+                    };
                 }
             }
         }
     };
 
-    // Handle errors
     window[`eventSource${instanceId}`].onerror = function (error) {
         console.error(`Error occurred for instance ${instanceId}:`, error);
         const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
@@ -409,125 +400,151 @@ function updateSSEConnection(instanceId, uniqueCode) {
     };
 }
 
-function findClosestCarData(trafficTime, carData) {
-    if (!carData || carData.length === 0) return null;
+function processHistoricalData(jsonData) {
+    const alignedData = [];
+    const carDataMap = new Map();
 
-    const trafficTimeValue = trafficTime.getTime();
-
-    let closest = null;
-    let smallestDiff = Infinity;
-
-    carData.forEach(car => {
-        const carTime = new Date(car.timestamp).getTime();
-        const diff = Math.abs(carTime - trafficTimeValue);
-        if (diff < smallestDiff) {
-            smallestDiff = diff;
-            closest = car;
-        }
+    // Create map of car data by timestamp (milliseconds)
+    jsonData.car.forEach(car => {
+        const time = new Date(car.timestamp).getTime();
+        carDataMap.set(time, {
+            speed: car.current_speed,
+            limit: car.current_speed_limit,
+            threshold: car.current_threshold,
+            lat: car.current_latitude,
+            lng: car.current_longitude
+        });
     });
 
-    return closest;
-}
+    // Process traffic data and align with car data
+    jsonData.traffic.forEach(traffic => {
+        const trafficTime = new Date(traffic.timestamps).getTime();
 
-async function loadDataAndUpdateChart(dropdownId, instanceId) {
-    const dropdown = document.getElementById(dropdownId);
-    dropdown.addEventListener('change', async function () {
-        createChart('speedLimit', `chart-speed-limit-${instanceId}`);
-        createChart('trafficSpeed', `chart-traffic-speed-${instanceId}`);
-        const fileUrl = this.value;
-        if (!fileUrl) return;
+        // Find closest car data within 30 seconds
+        let closestCar = null;
+        let smallestDiff = Infinity;
 
-        try {
-            const response = await fetch(fileUrl);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+        carDataMap.forEach((carData, carTime) => {
+            const diff = Math.abs(carTime - trafficTime);
+            if (diff < smallestDiff && diff <= 30000) {
+                smallestDiff = diff;
+                closestCar = carData;
             }
-            const jsonData = await response.json();
+        });
 
-            // Use traffic timestamps as the primary time reference
-            const trafficTimestamps = jsonData.traffic.map(traffic => {
-                const date = new Date(traffic.timestamps);
-                return date.toLocaleString('de-DE', {
+        // Find corresponding weather data
+        const weather = jsonData.weather.find(w =>
+            new Date(w.timestamps).getTime() === trafficTime
+        );
+
+        if (closestCar) {
+            alignedData.push({
+                timestamp: new Date(traffic.timestamps).toLocaleString('de-DE', {
                     day: '2-digit',
                     month: '2-digit',
                     year: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
                     timeZone: 'Europe/Berlin'
-                }).replace(',', '');
+                }).replace(',', ''),
+                carSpeed: closestCar.speed,
+                carSpeedLimit: closestCar.limit,
+                carThreshold: closestCar.threshold,
+                trafficSpeed: traffic.live_speeds,
+                weather: weather ? {
+                    temperature: weather.temperatures,
+                    condition: weather.weather_conditions,
+                    visibility: weather.visibility,
+                    location: weather.location
+                } : null
             });
+        }
+    });
 
-            // Process car data to align with traffic timestamps
-            const carSpeeds = [];
-            const carSpeedLimits = [];
-            const carDataMap = {};
+    return alignedData;
+}
 
-            // Create a map of car data by timestamp
-            jsonData.car.forEach(car => {
-                const date = new Date(car.timestamp);
-                const timeKey = date.toLocaleString('de-DE', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZone: 'Europe/Berlin'
-                });
-                carDataMap[timeKey] = {
-                    speed: car.current_speed,
-                    limit: car.current_speed_limit
-                };
-            });
+async function loadDataAndUpdateChart(dropdownId, instanceId) {
+    const dropdown = document.getElementById(dropdownId);
+    dropdown.addEventListener('change', async function () {
+        const fileUrl = this.value;
+        if (!fileUrl) return;
 
-            // Match car speeds with traffic timestamps
-            jsonData.traffic.forEach(traffic => {
-                const trafficTime = new Date(traffic.timestamps);
-                const timeKey = trafficTime.toLocaleString('de-DE', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    second: '2-digit',
-                    timeZone: 'Europe/Berlin'
-                });
+        try {
+            const response = await fetch(fileUrl);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const jsonData = await response.json();
 
-                if (carDataMap[timeKey]) {
-                    carSpeeds.push(carDataMap[timeKey].speed);
-                    carSpeedLimits.push(carDataMap[timeKey].limit);
-                } else {
-                    // If no exact match, find the closest car data
-                    const closestCar = findClosestCarData(trafficTime, jsonData.car);
-                    carSpeeds.push(closestCar ? closestCar.current_speed : null);
-                    carSpeedLimits.push(closestCar ? closestCar.current_speed_limit : null);
-                }
-            });
+            // Process and align all data types
+            const processedData = processHistoricalData(jsonData);
 
-            // Get traffic speeds
-            const trafficSpeeds = jsonData.traffic.map(traffic => traffic.live_speeds);
 
-            // Initialize both charts with traffic timestamps
-            // In the loadDataAndUpdateChart function, update the chart initialization:
+            // Update charts with aligned data
             createChart('speedLimit', `chart-speed-limit-${instanceId}`, {
-                timestamps: trafficTimestamps,
-                current_speed: carSpeeds,
-                current_speed_limit: carSpeedLimits.map(limit => limit === -1 ? 140 : limit),
-                threshold_values: jsonData.car.map(car => car.current_threshold),
-                car: jsonData.car  // Pass car data for threshold initialization
+                timestamps: processedData.map(d => d.timestamp),
+                current_speed: processedData.map(d => d.carSpeed),
+                current_speed_limit: processedData.map(d => d.carSpeedLimit === -1 ? 140 : d.carSpeedLimit),
+                threshold_values: processedData.map(d => d.carThreshold)
             });
 
             createChart('trafficSpeed', `chart-traffic-speed-${instanceId}`, {
-                timestamps: trafficTimestamps,
-                current_speed: carSpeeds,
-                traffic_speed: trafficSpeeds
+                timestamps: processedData.map(d => d.timestamp),
+                current_speed: processedData.map(d => d.carSpeed),
+                traffic_speed: processedData.map(d => d.trafficSpeed)
             });
 
-            // Extract unique code (instance_id) from the filename
+            // Update map with initial position
+            if (jsonData.car.length > 0) {
+                const firstCarData = jsonData.car[0];
+                updateCarPosition(
+                    instanceId,
+                    firstCarData.current_latitude,
+                    firstCarData.current_longitude
+                );
+            }
+
+            // Update info displays
+            if (jsonData.weather && jsonData.weather.length > 0) {
+                const weather = jsonData.weather[jsonData.weather.length - 1];
+                document.getElementById(`weatherOutput-${instanceId}`).textContent =
+                    `Temperature: ${weather.temperatures}\u00B0C\n` +
+                    `Condition: ${weather.weather_conditions}\n` +
+                    `Visibility: ${weather.visibility} km\n` +
+                    `Location: ${weather.location}`;
+            }
+
+            if (jsonData.traffic && jsonData.traffic.length > 0) {
+                const traffic = jsonData.traffic[jsonData.traffic.length - 1];
+                document.getElementById(`trafficOutput-${instanceId}`).textContent =
+                    `Live Speed: ${traffic.live_speeds} km/h\n` +
+                    `Free Flow: ${traffic.free_flow_speeds} km/h\n` +
+                    `Confidence: ${(traffic.confidence * 100).toFixed(1)}%`;
+            }
+
+            if (jsonData.car && jsonData.car.length > 0) {
+                const car = jsonData.car[jsonData.car.length - 1];
+                const carOutput = document.getElementById(`carOutput-${instanceId}`);
+
+                // Using innerHTML with CSS classes for better formatting
+                carOutput.innerHTML = [
+                    `<div class="car-data-line">Speed: <strong>${car.current_speed} km/h</strong></div>`,
+                    `<div class="car-data-line">Limit: <strong>${car.current_speed_limit === -1 ? 'None' : car.current_speed_limit + ' km/h'}</strong></div>`,
+                    `<div class="car-data-line">Threshold: <strong>${car.current_threshold}</strong></div>`,
+                    `<div class="car-data-line">Headlights: <span class="light-status ${car.lights ? 'on' : 'off'}">${car.lights ? 'ON' : 'OFF'}</span></div>`,
+                    `<div class="car-data-line">Fog Lights: <span class="light-status ${car.fog_lights ? 'on' : 'off'}">${car.fog_lights ? 'ON' : 'OFF'}</span></div>`
+                ].join('');
+
+                updateThresholdInfo(instanceId, car.current_threshold);
+            }
+
+            // Extract unique code and update SSE
             const uniqueCode = extractUniqueCode(fileUrl);
             if (uniqueCode) {
-                // Load and draw the initial route
                 await loadInitialRouteAndDrawMap(
                     instanceId === 1 ? map1 : map2,
                     uniqueCode,
                     instanceId
                 );
-
-                // Update the SSE URL with the instance_id
                 updateSSEConnection(instanceId, uniqueCode);
             }
         } catch (error) {

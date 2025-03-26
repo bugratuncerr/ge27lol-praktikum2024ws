@@ -213,13 +213,19 @@ def record():
         if instance_id in trackers:
             if state in ['stopping', 'stopped']:
                 trackers[instance_id].pause_updates()
+                if instance_id in all_data:
+                    all_data[instance_id]["_paused"] = True
             elif state == 'running':
                 trackers[instance_id].resume_updates()
+                if instance_id in all_data and "_paused" in all_data[instance_id]:
+                    del all_data[instance_id]["_paused"]
             elif state == 'finished':
                 # Clean up the tracker for this instance
                 trackers[instance_id]._stop_tracking_thread()
                 trackers.pop(instance_id, None)  # Remove the tracker from the dictionary
                 cars.pop(instance_id, None)  # Remove the tracker from the dictionary
+                all_data.pop(instance_id, None)  # Remove from all_data to stop SSE updates
+                #historical_data.pop(instance_id, None)  #  clean historical data
 
 
     filtered_data = {key: value for key, value in contents['content'].items() if 'value' in key}
@@ -264,24 +270,10 @@ def record():
         
         car_data = {key: value for key, value in final.items() if 'car' in key}
         if car_data:
-            # Check if previous data exists in all_data
-            if not (instance_id in all_data and 
-                    "car" in all_data[instance_id] and 
-                    car_data["car"]["current_latitude"] == all_data[instance_id]["car"]["current_latitude"] and 
-                    car_data["car"]["current_longitude"] == all_data[instance_id]["car"]["current_longitude"]):
-                
-                # Update all_data only if the location changes
-                all_data[instance_id]["car"] = car_data['car']
-
-                if "car" not in historical_data[instance_id]:
-                    historical_data[instance_id]["car"] = []
-
-                # Check historical_data for duplicates as well
-                if (not historical_data[instance_id]["car"] or 
-                    car_data["car"]["current_latitude"] != historical_data[instance_id]["car"][-1]["current_latitude"] or 
-                    car_data["car"]["current_longitude"] != historical_data[instance_id]["car"][-1]["current_longitude"]):
-                    
-                    historical_data[instance_id]["car"].append(car_data["car"])        
+            all_data[instance_id]["car"] = car_data['car']
+            if "car" not in historical_data[instance_id]:
+                historical_data[instance_id]["car"] = []
+            historical_data[instance_id]["car"].append(car_data["car"])        
 
         # Write historical data to a file
         if(instance_id != 0):
@@ -297,9 +289,17 @@ def sse():
     while True:
         try:
             if instance_id:
-                yield 'data: ' + json.dumps(all_data.get(int(instance_id), {})) + '\n\n'
+                instance_id_int = int(instance_id)
+                # Only send data if instance exists AND isn't paused
+                if instance_id_int in all_data and not all_data[instance_id_int].get("_paused", False):
+                    yield 'data: ' + json.dumps(all_data[instance_id_int]) + '\n\n'
             else:
-                yield 'data: ' + json.dumps(all_data) + '\n\n'
-            time.sleep(60)
+                # Filter out paused instances when sending all data
+                active_data = {
+                    k: v for k, v in all_data.items() 
+                    if not v.get("_paused", False)
+                }
+                yield 'data: ' + json.dumps(active_data) + '\n\n'
+            time.sleep(30)
         except GeneratorExit:
             break
