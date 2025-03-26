@@ -123,9 +123,12 @@ def get_routes():
         
         if instance_id not in cars:
             cars[instance_id] = Car(instance_id=instance_id)
-            trackers[instance_id] = RouteTracker(cars[instance_id])
 
+        if instance_id not in trackers:
+            trackers[instance_id] = RouteTracker(cars[instance_id])
+        
         distance, travel_time, error = trackers[instance_id].fetch_route_data(waypoints)
+
         
         if distance is None or travel_time is None:
             return HTTPResponse(status=400, body=json.dumps({'error': 'Waypoints are required'}), headers={'content-type': 'application/json'})
@@ -181,7 +184,6 @@ def get_last_location():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
-
 def record():
     global all_data
     global historical_data
@@ -191,22 +193,21 @@ def record():
     data = body.decode('utf-8') if isinstance(body, bytes) else body
     parts = [part for part in data.split('--Time_is_an_illusion._Lunchtime_doubly_so.0xriddldata') if part.strip()][3]
     parts = [part for part in parts.split('\r\n\r\n') if part.strip()][1]
-    contents = json.loads(parts)['content']
+    contents = json.loads(parts)
 
-
-
-    if 'content' in contents and 'state' in contents['content']:
-        state = contents['content']['state']
+    if 'state' in contents['content']:
+        state = contents['content']['state']        
         instance_id = contents.get('instance')  # Get instance ID from top level
-        
+
         if instance_id in trackers:
             if state in ['stopping', 'stopped']:
                 trackers[instance_id].pause_updates()
             elif state == 'running':
                 trackers[instance_id].resume_updates()
+            #Finished state
 
 
-    filtered_data = {key: value for key, value in contents.items() if 'value' in key}
+    filtered_data = {key: value for key, value in contents['content'].items() if 'value' in key}
     if filtered_data:
         final = filtered_data['values']
         
@@ -248,11 +249,25 @@ def record():
         
         car_data = {key: value for key, value in final.items() if 'car' in key}
         if car_data:
-            all_data[instance_id]["car"] = car_data['car']
-            if "car" not in historical_data[instance_id]:
-                historical_data[instance_id]["car"] = [] 
-            historical_data[instance_id]["car"].append(car_data['car'])
-        
+            # Check if previous data exists in all_data
+            if not (instance_id in all_data and 
+                    "car" in all_data[instance_id] and 
+                    car_data["car"]["current_latitude"] == all_data[instance_id]["car"]["current_latitude"] and 
+                    car_data["car"]["current_longitude"] == all_data[instance_id]["car"]["current_longitude"]):
+                
+                # Update all_data only if the location changes
+                all_data[instance_id]["car"] = car_data['car']
+
+                if "car" not in historical_data[instance_id]:
+                    historical_data[instance_id]["car"] = []
+
+                # Check historical_data for duplicates as well
+                if (not historical_data[instance_id]["car"] or 
+                    car_data["car"]["current_latitude"] != historical_data[instance_id]["car"][-1]["current_latitude"] or 
+                    car_data["car"]["current_longitude"] != historical_data[instance_id]["car"][-1]["current_longitude"]):
+                    
+                    historical_data[instance_id]["car"].append(car_data["car"])        
+
         # Write historical data to a file
         if(instance_id != 0):
             write_to_json_historical(f'historical_data_{str(instance_id)}.json', historical_data[instance_id])
