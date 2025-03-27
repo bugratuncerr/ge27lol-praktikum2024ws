@@ -534,8 +534,28 @@ async function loadDataAndUpdateChart(dropdownId, instanceId) {
                     `<div class="car-data-line">Fog Lights: <span class="light-status ${car.fog_lights ? 'on' : 'off'}">${car.fog_lights ? 'ON' : 'OFF'}</span></div>`
                 ].join('');
 
+
+                const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
+                if (car.arrived) {
+                    arrivalStatus.textContent = "Status: ARRIVED";
+                    arrivalStatus.style.color = "white";
+                    arrivalStatus.style.backgroundColor = "#4CAF50";
+                    arrivalStatus.style.fontWeight = "bold";
+
+                } else {
+                    arrivalStatus.textContent = "Status: In Transit";
+                    arrivalStatus.style.color = "";
+                    arrivalStatus.style.backgroundColor = "";
+                    arrivalStatus.style.fontWeight = "";
+                }
+                // Update map with final position if coordinates exist
+
+
                 updateThresholdInfo(instanceId, car.current_threshold);
             }
+
+
+
 
             // Extract unique code and update SSE
             const uniqueCode = extractUniqueCode(fileUrl);
