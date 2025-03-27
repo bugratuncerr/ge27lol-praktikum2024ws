@@ -150,8 +150,8 @@ function updateThresholdInfo(instanceId, currentThreshold) {
 
     const thresholdOutput = document.getElementById(`thresholdOutput-${instanceId}`);
     thresholdOutput.innerHTML = [
-        `<strong>Current Threshold:</strong> ${currentThreshold}`,
-        `<strong>Threshold Intensity:</strong> ${intensity}`,
+        `<strong>Speed Reduction Factor:</strong> ${currentThreshold}`,
+        `<strong>Intensity:</strong> ${intensity}`,
         `<strong>Calculated Speed Reduction:</strong> ${exactReduction.toFixed(1)}%`
     ].join('\n');
 }
@@ -292,7 +292,7 @@ function createChart(chartType, canvasId, initialData = null) {
                 fill: false,
             },
             {
-                label: 'Threshold',
+                label: 'Speed Reduction Factor',
                 data: initialData?.threshold_values || [],
                 borderColor: '#ffa500',
                 borderDash: [3, 3],
@@ -802,7 +802,7 @@ function createThresholdRadar(instanceId, data) {
                 'Confidence'
             ],
             datasets: [{
-                label: 'Threshold Contributors',
+                label: 'SRF Contributors',
                 data: Object.values(factors),
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
                 borderColor: '#000000', // Black connecting line
