@@ -23,10 +23,12 @@
     <div class="container">
         <div class="instance" id="instance-1">
             <h2>Instance 1</h2>
-            <label for="file-select-1">Select File:</label>
-            <select id="file-select-1">
-                <option value="">Select a file...</option>
-            </select>
+            <div class="file-selector">
+                <select id="file-select-1" class="file-dropdown">
+                  <option value="" selected disabled>Select an instance file...</option>
+                </select>
+                <button class="reload-btn" data-instance="1">Reload</button>
+              </div>
 
             <h2>Current Data</h2>
             <div class="data-container">
@@ -77,10 +79,12 @@
 
         <div class="instance" id="instance-2">
             <h2>Instance 2</h2>
-            <label for="file-select-2">Select File:</label>
-            <select id="file-select-2">
-                <option value="">Select a file...</option>
-            </select>
+            <div class="file-selector">
+                <select id="file-select-2" class="file-dropdown">
+                  <option value="" selected disabled>Select an instance file...</option>
+                </select>
+                <button class="reload-btn" data-instance="2">Reload</button>
+              </div>
 
             <h2>Current Data</h2>
             <div class="data-container">
