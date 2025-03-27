@@ -58,6 +58,18 @@
                 <canvas id="chart-traffic-speed-1"></canvas>
             </div>
 
+            <div class="radar-wrapper">
+                <h3>Threshold Contribution Analysis</h3>
+                <div class="radar-chart-container">
+                    <canvas id="thresholdRadarChart-1"></canvas>
+                </div>
+                <div class="radar-footer">
+                    <span class="threshold-display">Current Threshold: <strong id="currentThresholdValue-1">0</strong>/50</span>
+                    <span class="speed-reduction">Speed Reduction: <strong id="speedReductionValue-1">0%</strong></span>
+                </div>
+            </div>
+
+
             <h2>Active Route Display</h2>
             <div class="arrival-status" id="arrivalStatus-1">Status: In Transit</div>
             <div id="map-1" class="chart-container"></div>
@@ -98,6 +110,19 @@
             <h3>TomTom Live Speed vs Calculated Speed</h3>
             <div class="chart-container">
                 <canvas id="chart-traffic-speed-2"></canvas>
+            </div>
+
+
+
+            <div class="radar-wrapper">
+                <h3>Threshold Contribution Analysis</h3>
+                <div class="radar-chart-container">
+                    <canvas id="thresholdRadarChart-2"></canvas>
+                </div>
+                <div class="radar-footer">
+                    <span class="threshold-display">Current Threshold: <strong id="currentThresholdValue-2">0</strong>/50</span>
+                    <span class="speed-reduction">Speed Reduction: <strong id="speedReductionValue-2">0%</strong></span>
+                </div>
             </div>
 
             <h2>Active Route Display</h2>
