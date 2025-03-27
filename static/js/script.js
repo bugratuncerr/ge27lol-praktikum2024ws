@@ -102,10 +102,50 @@ function updateThresholdInfo(instanceId, currentThreshold) {
         intensity = "Unknown";
     }
 
-    document.getElementById(`currentThreshold-${instanceId}`).textContent = currentThreshold;
-    document.getElementById(`thresholdIntensity-${instanceId}`).textContent = intensity;
-    document.getElementById(`speedReduction-${instanceId}`).textContent = `${exactReduction.toFixed(1)}%`;
+    const thresholdOutput = document.getElementById(`thresholdOutput-${instanceId}`);
+    thresholdOutput.innerHTML = [
+        `<strong>Current Threshold:</strong> ${currentThreshold}`,
+        `<strong>Threshold Intensity:</strong> ${intensity}`,
+        `<strong>Calculated Speed Reduction:</strong> ${exactReduction.toFixed(1)}%`
+    ].join('\n');
 }
+
+
+function updateWeatherOutput(instanceId, data) {
+    const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
+    weatherOutput.innerHTML = [
+        `<strong>Timestamp:</strong> ${data.timestamps}`,
+        `<strong>Temperature:</strong> ${data.temperatures}\u00B0C`,
+        `<strong>Condition:</strong> ${data.weather_conditions}`,
+        `<strong>Visibility:</strong> ${data.visibility} km`,
+        `<strong>Location:</strong> ${data.location}`
+    ].join('\n');
+}
+
+// Update traffic data display
+function updateTrafficOutput(instanceId, data) {
+    const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
+    trafficOutput.innerHTML = [
+        `<strong>Live Speed:</strong> ${data.live_speeds} km/h`,
+        `<strong>Free Flow:</strong> ${data.free_flow_speeds} km/h`,
+        `<strong>Confidence:</strong> ${(data.confidence * 100).toFixed(1)}%`,
+        `<strong>Road Closure:</strong> ${data.road_closure ? 'Yes' : 'No'}`,
+        `<strong>Incidents:</strong> ${data.incidents || 'None'}`
+    ].join('\n');
+}
+
+// Update car data display (already has bold labels)
+function updateCarOutput(instanceId, data) {
+    const carOutput = document.getElementById(`carOutput-${instanceId}`);
+    carOutput.innerHTML = [
+        `<div class="car-data-line"><strong>Speed:</strong> ${data.current_speed} km/h</div>`,
+        `<div class="car-data-line"><strong>Limit:</strong> ${data.current_speed_limit === -1 ? 'None' : data.current_speed_limit + ' km/h'}</div>`,
+        `<div class="car-data-line"><strong>Headlights:</strong> <span class="light-status ${data.lights ? 'on' : 'off'}">${data.lights ? 'ON' : 'OFF'}</span></div>`,
+        `<div class="car-data-line"><strong>Fog Lights:</strong> <span class="light-status ${data.fog_lights ? 'on' : 'off'}">${data.fog_lights ? 'ON' : 'OFF'}</span></div>`
+    ].join('');
+}
+
+
 
 // Function to extract the unique code from the filename
 function extractUniqueCode(filename) {
@@ -193,7 +233,7 @@ function createChart(chartType, canvasId, initialData = null) {
     if (chartType === 'speedLimit') {
         config.data.datasets = [
             {
-                label: 'Current Speed',
+                label: 'Calculated Car Speed',
                 data: initialData?.current_speed || [],
                 borderColor: '#6200ea',
                 fill: false,
@@ -216,13 +256,13 @@ function createChart(chartType, canvasId, initialData = null) {
     } else { // trafficSpeed
         config.data.datasets = [
             {
-                label: 'Car Speed',
+                label: 'Calculated Car Speed',
                 data: initialData?.current_speed || [],
                 borderColor: '#6200ea',
                 fill: false,
             },
             {
-                label: 'Traffic Speed',
+                label: 'TomTom Live Speed',
                 data: initialData?.traffic_speed || [],
                 borderColor: '#00bcd4',
                 fill: false,
@@ -299,36 +339,19 @@ function updateSSEConnection(instanceId, uniqueCode) {
         }).replace(',', '');
 
         // Update weather data
-        const weatherOutput = document.getElementById(`weatherOutput-${instanceId}`);
         if (data["weather"]) {
-            weatherOutput.textContent = `Temperature: ${data.weather.temperatures}\u00B0C\n` +
-                `Condition: ${data.weather.weather_conditions}\n` +
-                `Visibility: ${data.weather.visibility} km\n` +
-                `Location: ${data.weather.location}`
+            updateWeatherOutput(instanceId, data.weather);
         }
 
         // Update traffic data
-        const trafficOutput = document.getElementById(`trafficOutput-${instanceId}`);
         if (data["traffic"]) {
-            trafficOutput.textContent = `Live Speed: ${data.traffic.live_speeds} km/h\n` +
-                `Free Flow: ${data.traffic.free_flow_speeds} km/h\n` +
-                `Confidence: ${(data.traffic.confidence * 100).toFixed(1)}%`;
+            updateTrafficOutput(instanceId, data.traffic);
         }
 
         // Update car data and position
-        const carOutput = document.getElementById(`carOutput-${instanceId}`);
         if (data["car"]) {
-            carOutput.innerHTML = [
-                `<div class="car-data-line">Speed: <strong>${data.car.current_speed} km/h</strong></div>`,
-                `<div class="car-data-line">Limit: <strong>${data.car.current_speed_limit === -1 ? 'None' : data.car.current_speed_limit + ' km/h'}</strong></div>`,
-                `<div class="car-data-line">Threshold: <strong>${data.car.current_threshold}</strong></div>`,
-                `<div class="car-data-line">Headlights: <span class="light-status ${data.car.lights ? 'on' : 'off'}">${data.car.lights ? 'ON' : 'OFF'}</span></div>`,
-                `<div class="car-data-line">Fog Lights: <span class="light-status ${data.car.fog_lights ? 'on' : 'off'}">${data.car.fog_lights ? 'ON' : 'OFF'}</span></div>`
-            ].join('');
-
-            if (data["car"].current_threshold !== undefined) {
-                updateThresholdInfo(instanceId, data["car"].current_threshold);
-            }
+            updateCarOutput(instanceId, data.car);
+            updateThresholdInfo(instanceId, data.car.current_threshold);
 
             // Update arrival status
             const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
@@ -412,7 +435,9 @@ function processHistoricalData(jsonData) {
             limit: car.current_speed_limit,
             threshold: car.current_threshold,
             lat: car.current_latitude,
-            lng: car.current_longitude
+            lng: car.current_longitude,
+            fog_lights: car.fog_lights,
+            arrived: car.arrived
         });
     });
 
@@ -450,7 +475,14 @@ function processHistoricalData(jsonData) {
                 carSpeed: closestCar.speed,
                 carSpeedLimit: closestCar.limit,
                 carThreshold: closestCar.threshold,
+                carLights: closestCar.lights,
+                carFogLights: closestCar.fog_lights,
+                carArrived: closestCar.arrived,
                 trafficSpeed: traffic.live_speeds,
+                trafficFreeFlow: traffic.free_flow_speeds,
+                trafficConfidence: traffic.confidence,
+                roadClosure: traffic.road_closure,
+                incidents: traffic.incidents,
                 weather: weather ? {
                     temperature: weather.temperatures,
                     condition: weather.weather_conditions,
@@ -503,36 +535,41 @@ async function loadDataAndUpdateChart(dropdownId, instanceId) {
                 );
             }
 
-            // Update info displays
+            // Update info displays with bold labels
             if (jsonData.weather && jsonData.weather.length > 0) {
                 const weather = jsonData.weather[jsonData.weather.length - 1];
-                document.getElementById(`weatherOutput-${instanceId}`).textContent =
-                    `Temperature: ${weather.temperatures}\u00B0C\n` +
-                    `Condition: ${weather.weather_conditions}\n` +
-                    `Visibility: ${weather.visibility} km\n` +
-                    `Location: ${weather.location}`;
+
+                document.getElementById(`weatherOutput-${instanceId}`).innerHTML = [
+                    `<strong>Timestamp:</strong> ${weather.timestamps}`,
+                    `<strong>Temperature:</strong> ${weather.temperatures}\u00B0C`,
+                    `<strong>Condition:</strong> ${weather.weather_conditions}`,
+                    `<strong>Visibility:</strong> ${weather.visibility} km`,
+                    `<strong>Location:</strong> ${weather.location}`
+                ].join('\n');
             }
 
             if (jsonData.traffic && jsonData.traffic.length > 0) {
                 const traffic = jsonData.traffic[jsonData.traffic.length - 1];
-                document.getElementById(`trafficOutput-${instanceId}`).textContent =
-                    `Live Speed: ${traffic.live_speeds} km/h\n` +
-                    `Free Flow: ${traffic.free_flow_speeds} km/h\n` +
-                    `Confidence: ${(traffic.confidence * 100).toFixed(1)}%`;
+                document.getElementById(`trafficOutput-${instanceId}`).innerHTML = [
+                    `<strong>Live Speed:</strong> ${traffic.live_speeds} km/h`,
+                    `<strong>Free Flow:</strong> ${traffic.free_flow_speeds} km/h`,
+                    `<strong>Confidence:</strong> ${(traffic.confidence * 100).toFixed(1)}%`,
+                    `<strong>Road Closure:</strong> ${traffic.road_closure ? 'Yes' : 'No'}`,
+                    `<strong>Incidents:</strong> ${traffic.incidents || 'None'}`
+                ].join('\n');
             }
 
             if (jsonData.car && jsonData.car.length > 0) {
                 const car = jsonData.car[jsonData.car.length - 1];
-                const carOutput = document.getElementById(`carOutput-${instanceId}`);
-
-                // Using innerHTML with CSS classes for better formatting
-                carOutput.innerHTML = [
-                    `<div class="car-data-line">Speed: <strong>${car.current_speed} km/h</strong></div>`,
-                    `<div class="car-data-line">Limit: <strong>${car.current_speed_limit === -1 ? 'None' : car.current_speed_limit + ' km/h'}</strong></div>`,
-                    `<div class="car-data-line">Threshold: <strong>${car.current_threshold}</strong></div>`,
-                    `<div class="car-data-line">Headlights: <span class="light-status ${car.lights ? 'on' : 'off'}">${car.lights ? 'ON' : 'OFF'}</span></div>`,
-                    `<div class="car-data-line">Fog Lights: <span class="light-status ${car.fog_lights ? 'on' : 'off'}">${car.fog_lights ? 'ON' : 'OFF'}</span></div>`
+                document.getElementById(`carOutput-${instanceId}`).innerHTML = [
+                    `<div class="car-data-line"><strong>Speed:</strong> ${car.current_speed} km/h</div>`,
+                    `<div class="car-data-line"><strong>Limit:</strong> ${car.current_speed_limit === -1 ? 'None' : car.current_speed_limit + ' km/h'}</div>`,
+                    `<div class="car-data-line"><strong>Headlights:</strong> <span class="light-status ${car.lights ? 'on' : 'off'}">${car.lights ? 'ON' : 'OFF'}</span></div>`,
+                    `<div class="car-data-line"><strong>Fog Lights:</strong> <span class="light-status ${car.fog_lights ? 'on' : 'off'}">${car.fog_lights ? 'ON' : 'OFF'}</span></div>`
                 ].join('');
+
+                // Update threshold info with bold labels
+                updateThresholdInfo(instanceId, car.current_threshold);
 
 
                 const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
