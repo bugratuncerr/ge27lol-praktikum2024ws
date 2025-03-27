@@ -403,9 +403,25 @@ body {
 }
 
 .reload-btn {
-  padding: 6px 12px;
+  /* Basic styling */
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #6200ea;
+  color: #f8f9fa;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
   white-space: nowrap;
-}
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  
+  /* Modern shadow */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  }
+
 
 .file-dropdown:empty::before {
   content: attr(placeholder);
