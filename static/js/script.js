@@ -408,6 +408,15 @@ function updateSSEConnection(instanceId, uniqueCode) {
                     };
                 }
             }
+
+
+            if (data["weather"] && data["traffic"] && data["car"]) {
+                createThresholdRadar(instanceId, {
+                    weather: data["weather"],
+                    traffic: data["traffic"],
+                    car: data["car"]
+                });
+            }
         }
     };
 
@@ -591,7 +600,16 @@ async function loadDataAndUpdateChart(dropdownId, instanceId) {
                 updateThresholdInfo(instanceId, car.current_threshold);
             }
 
-
+            if (jsonData.weather && jsonData.traffic && jsonData.car) {
+                const car = jsonData.car[jsonData.car.length - 1];
+                const traffic = jsonData.traffic[jsonData.traffic.length - 1];
+                const weather = jsonData.weather[jsonData.weather.length - 1];
+                createThresholdRadar(instanceId, {
+                    weather: car,
+                    traffic: traffic,
+                    car: weather
+                });
+            }
 
 
             // Extract unique code and update SSE
@@ -606,6 +624,201 @@ async function loadDataAndUpdateChart(dropdownId, instanceId) {
             }
         } catch (error) {
             console.error('Error loading JSON data:', error);
+        }
+    });
+}
+
+function calculateConfidence(data) {
+    const conf = data.traffic.confidence;
+    if (conf < 1 ) return 2;
+    return 5;
+}
+
+// Helper functions that mirror your backend logic
+function calculateTrafficDensityContribution(data) {
+    const free_flow = data.traffic.free_flow_speeds;
+    const live_speed = data.traffic.live_speeds;
+    if (free_flow <= live_speed) return 0;
+    
+    const slowdown = ((free_flow - live_speed) / free_flow) * 100;
+    if (slowdown <= 10) return 5;
+    if (slowdown <= 30) return 10;
+    if (slowdown <= 50) return 15;
+    return 20;
+}
+
+function calculateTimeOfDayContribution() {
+    const hour = new Date().getHours();
+    return (hour >= 6 && hour <= 9) || (hour >= 16 && hour <= 19) ? 5 : 0;
+}
+
+function calculateIncidentContribution(data) {
+    return Math.min(data.traffic.incidents * 5, 15);
+}
+
+function calculateRoadClosureContribution(data) {
+    return data.traffic.road_closure ? 20 : 0;
+}
+
+function calculateVisibilityContribution(data) {
+    const vis = data.weather.visibility;
+    const weather = data.weather.weather_conditions;
+    if(["Fog", "Mist", "Heavy snow", "Blizzard", "Blowing snow", "Freezing fog"].includes(weather)) return 0;
+    if (vis <= 0.5) return 15;
+    if (vis <= 1) return 10;
+    if (vis <= 3) return 5;
+    if (vis <= 5) return 2;
+    if (vis < 10) return 1;
+    return 0;
+}
+
+function calculatePrecipitationContribution(data) {
+    const weather = data.weather.weather_conditions;
+    
+    // Extreme Impact
+    if (["Blizzard","Heavy snow","Blowing snow","Moderate or heavy freezing rain",
+         "Torrential rain shower","Moderate or heavy rain with thunder",
+         "Moderate or heavy snow with thunder"].includes(weather)) return 15;
+         
+    // High Impact
+    if (["Heavy rain","Heavy rain at times","Moderate or heavy sleet",
+         "Moderate or heavy sleet showers","Moderate or heavy showers of ice pellets",
+         "Freezing fog","Heavy freezing drizzle"].includes(weather)) return 10;
+         
+    // Moderate Impact
+    if (["Fog","Mist","Freezing fog","Moderate rain","Moderate rain at times",
+         "Light freezing rain","Light sleet","Patchy heavy snow","Moderate snow",
+         "Ice pellets","Thundery outbreaks possible"].includes(weather)) return 5;
+         
+    // Light Impact
+    if (["Light rain","Light drizzle","Light snow","Patchy light rain",
+         "Patchy light snow","Patchy light drizzle"].includes(weather)) return 2;
+         
+    return 0;
+}
+
+function calculateSpeedReduction(threshold) {
+    threshold = Math.min(threshold, 50);
+    if (threshold <= 10) return threshold * 0.01;
+    if (threshold <= 30) return 0.1 + (threshold - 10) * 0.015;
+    return 0.4 + (threshold - 30) * 0.01;
+}
+
+function isRushHour() {
+    const hour = new Date().getHours();
+    return (hour >= 6 && hour <= 9) || (hour >= 16 && hour <= 19);
+}
+
+
+
+function createThresholdRadar(instanceId, data) {
+    const ctx = document.getElementById(`thresholdRadarChart-${instanceId}`).getContext('2d');
+    
+    if (window[`radarChart${instanceId}`]) {
+        window[`radarChart${instanceId}`].destroy();
+    }
+
+    const factors = {
+        trafficDensity: calculateTrafficDensityContribution(data),
+        timeOfDay: calculateTimeOfDayContribution(),
+        incidents: calculateIncidentContribution(data),
+        roadClosures: calculateRoadClosureContribution(data),
+        visibility: calculateVisibilityContribution(data),
+        precipitation: calculatePrecipitationContribution(data),
+        confidence: calculateConfidence(data)
+    };
+
+    const totalThreshold = Object.values(factors).reduce((sum, val) => sum + val, 0);
+    const speedReduction = calculateSpeedReduction(totalThreshold);
+
+    document.getElementById(`currentThresholdValue-${instanceId}`).textContent = Math.min(totalThreshold, 50);
+    document.getElementById(`speedReductionValue-${instanceId}`).textContent = `${(speedReduction * 100).toFixed(1)}%`;
+
+    const labelColors = [
+        '#FF6384', '#36A2EB', '#FFCE56', 
+        '#4BC0C0', '#9966FF', '#FF9F40', 
+        '#8AC24A'
+    ];
+
+    window[`radarChart${instanceId}`] = new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: [
+                'Traffic Density',
+                'Rush Hour',
+                'Incidents',
+                'Road Closures',
+                'Visibility',
+                'Weather Conditions',
+                'Confidence'
+            ],
+            datasets: [{
+                label: 'Threshold Contributors',
+                data: Object.values(factors),
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                borderColor: labelColors.map(color => `${color}CC`),
+                pointBackgroundColor: (context) => {
+                    // Hide points with value 0
+                    return context.dataset.data[context.dataIndex] === 0 ? 
+                        'rgba(0,0,0,0)' : // Transparent
+                        labelColors[context.dataIndex];
+                },
+                pointRadius: (context) => {
+                    // Hide points with value 0
+                    return context.dataset.data[context.dataIndex] === 0 ? 
+                        0 : // No radius
+                        5;
+                },
+                borderWidth: 2,
+                pointHoverRadius: (context) => {
+                    // Hide hover effect for zero values
+                    return context.dataset.data[context.dataIndex] === 0 ? 
+                        0 : // No hover radius
+                        7;
+                }
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: {
+                        display: true,
+                        color: 'rgba(200, 200, 200, 0.2)'
+                    },
+                    suggestedMin: 0,
+                    suggestedMax: 20,
+                    ticks: {
+                        stepSize: 5,
+                        callback: (value) => `${value} pts`,
+                        backdropColor: 'rgba(0, 0, 0, 0)'
+                    },
+                    pointLabels: {
+                        color: (context) => labelColors[context.index],
+                        font: {
+                            weight: 'bold',
+                            size: 12
+                        }
+                    }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        labelColor: (context) => ({
+                            borderColor: labelColors[context.dataIndex],
+                            backgroundColor: labelColors[context.dataIndex],
+                            borderWidth: 2
+                        }),
+                        // Hide tooltips for zero values
+                        filter: (context) => {
+                            return context.dataset.data[context.dataIndex] !== 0;
+                        }
+                    }
+                }
+            }
         }
     });
 }
@@ -634,4 +847,16 @@ window.onload = function () {
     // Set up event listeners
     loadDataAndUpdateChart('file-select-1', 1);
     loadDataAndUpdateChart('file-select-2', 2);
+
+    createThresholdRadar(1, {
+        weather: [{ weather_conditions: "Clear", visibility: 10, temperatures: 0 }],
+        traffic: [{ live_speeds: 0, free_flow_speeds: 0, confidence: 0, incidents: 0, road_closure: false }],
+        car: [{ current_speed: 0, current_speed_limit: 0 }]
+    });
+    
+    createThresholdRadar(2, {
+        weather: [{ weather_conditions: "Clear", visibility: 10, temperatures: 0 }],
+        traffic: [{ live_speeds: 0, free_flow_speeds: 0, confidence: 0, incidents: 0, road_closure: false}],
+        car: [{ current_speed: 0, current_speed_limit: 0 }]
+    });
 };

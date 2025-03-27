@@ -331,3 +331,57 @@ body {
   visibility: visible;
   opacity: 1;
 }
+
+.radar-container {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.radar-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.threshold-display, .speed-reduction {
+  padding: 5px 10px;
+  background: #f5f5f5;
+  border-radius: 4px;
+}
+
+.threshold-display strong, .speed-reduction strong {
+  color: #6200ea;
+}
+
+.radar-wrapper {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 15px 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  position: relative; /* Keeps everything contained */
+  overflow: hidden; /* Prevents any runaway elements */
+}
+
+.radar-chart-container {
+  position: relative; 
+  height: 300px; /* Fixed height */
+  width: 100%;
+}
+
+#thresholdRadarChart-1, 
+#thresholdRadarChart-2 {
+  width: 100% !important; 
+  height: 100% !important;
+  display: block; /* Removes canvas inline spacing */
+}
+
+.chartjs-render-monitor .chartjs-radar-axis-label {
+    text-shadow: 0 0 3px rgba(0,0,0,0.3);
+    padding: 2px 5px;
+    border-radius: 3px;
+}
