@@ -357,11 +357,14 @@ function updateSSEConnection(instanceId, uniqueCode) {
             const arrivalStatus = document.getElementById(`arrivalStatus-${instanceId}`);
             if (data["car"].arrived) {
                 arrivalStatus.textContent = "Status: ARRIVED";
-                arrivalStatus.style.color = "green";
+                arrivalStatus.style.color = "white";
+                arrivalStatus.style.backgroundColor = "#4CAF50";
                 arrivalStatus.style.fontWeight = "bold";
+
             } else {
                 arrivalStatus.textContent = "Status: In Transit";
                 arrivalStatus.style.color = "";
+                arrivalStatus.style.backgroundColor = "";
                 arrivalStatus.style.fontWeight = "";
             }
 
@@ -630,7 +633,7 @@ async function loadDataAndUpdateChart(dropdownId, instanceId) {
 
 function calculateConfidence(data) {
     const conf = data.traffic.confidence;
-    if (conf < 1 ) return 2;
+    if (conf < 1) return 2;
     return 5;
 }
 
@@ -639,7 +642,7 @@ function calculateTrafficDensityContribution(data) {
     const free_flow = data.traffic.free_flow_speeds;
     const live_speed = data.traffic.live_speeds;
     if (free_flow <= live_speed) return 0;
-    
+
     const slowdown = ((free_flow - live_speed) / free_flow) * 100;
     if (slowdown <= 10) return 5;
     if (slowdown <= 30) return 10;
@@ -663,7 +666,7 @@ function calculateRoadClosureContribution(data) {
 function calculateVisibilityContribution(data) {
     const vis = data.weather.visibility;
     const weather = data.weather.weather_conditions;
-    if(["Fog", "Mist", "Heavy snow", "Blizzard", "Blowing snow", "Freezing fog"].includes(weather)) return 0;
+    if (["Fog", "Mist", "Heavy snow", "Blizzard", "Blowing snow", "Freezing fog"].includes(weather)) return 0;
     if (vis <= 0.5) return 15;
     if (vis <= 1) return 10;
     if (vis <= 3) return 5;
@@ -674,26 +677,26 @@ function calculateVisibilityContribution(data) {
 
 function calculatePrecipitationContribution(data) {
     const weather = data.weather.weather_conditions;
-    
+
     // Extreme Impact
-    if (["Blizzard","Heavy snow","Blowing snow","Moderate or heavy freezing rain",
-         "Torrential rain shower","Moderate or heavy rain with thunder",
-         "Moderate or heavy snow with thunder"].includes(weather)) return 15;
-         
+    if (["Blizzard", "Heavy snow", "Blowing snow", "Moderate or heavy freezing rain",
+        "Torrential rain shower", "Moderate or heavy rain with thunder",
+        "Moderate or heavy snow with thunder"].includes(weather)) return 15;
+
     // High Impact
-    if (["Heavy rain","Heavy rain at times","Moderate or heavy sleet",
-         "Moderate or heavy sleet showers","Moderate or heavy showers of ice pellets",
-         "Freezing fog","Heavy freezing drizzle"].includes(weather)) return 10;
-         
+    if (["Heavy rain", "Heavy rain at times", "Moderate or heavy sleet",
+        "Moderate or heavy sleet showers", "Moderate or heavy showers of ice pellets",
+        "Freezing fog", "Heavy freezing drizzle"].includes(weather)) return 10;
+
     // Moderate Impact
-    if (["Fog","Mist","Freezing fog","Moderate rain","Moderate rain at times",
-         "Light freezing rain","Light sleet","Patchy heavy snow","Moderate snow",
-         "Ice pellets","Thundery outbreaks possible"].includes(weather)) return 5;
-         
+    if (["Fog", "Mist", "Freezing fog", "Moderate rain", "Moderate rain at times",
+        "Light freezing rain", "Light sleet", "Patchy heavy snow", "Moderate snow",
+        "Ice pellets", "Thundery outbreaks possible"].includes(weather)) return 5;
+
     // Light Impact
-    if (["Light rain","Light drizzle","Light snow","Patchy light rain",
-         "Patchy light snow","Patchy light drizzle"].includes(weather)) return 2;
-         
+    if (["Light rain", "Light drizzle", "Light snow", "Patchy light rain",
+        "Patchy light snow", "Patchy light drizzle"].includes(weather)) return 2;
+
     return 0;
 }
 
@@ -713,7 +716,7 @@ function isRushHour() {
 
 function createThresholdRadar(instanceId, data) {
     const ctx = document.getElementById(`thresholdRadarChart-${instanceId}`).getContext('2d');
-    
+
     if (window[`radarChart${instanceId}`]) {
         window[`radarChart${instanceId}`].destroy();
     }
@@ -735,8 +738,8 @@ function createThresholdRadar(instanceId, data) {
     document.getElementById(`speedReductionValue-${instanceId}`).textContent = `${(speedReduction * 100).toFixed(1)}%`;
 
     const labelColors = [
-        '#FF6384', '#36A2EB', '#FFCE56', 
-        '#4BC0C0', '#9966FF', '#FF9F40', 
+        '#FF6384', '#36A2EB', '#FFCE56',
+        '#4BC0C0', '#9966FF', '#FF9F40',
         '#8AC24A'
     ];
 
@@ -760,21 +763,21 @@ function createThresholdRadar(instanceId, data) {
                 borderWidth: 2, // Line thickness
                 pointBackgroundColor: (context) => {
                     // Hide points with value 0
-                    return context.dataset.data[context.dataIndex] === 0 ? 
+                    return context.dataset.data[context.dataIndex] === 0 ?
                         'rgba(0,0,0,0)' : // Transparent
                         labelColors[context.dataIndex];
                 },
                 pointBorderColor: '#000000', // Black point borders
                 pointRadius: (context) => {
                     // Hide points with value 0
-                    return context.dataset.data[context.dataIndex] === 0 ? 
+                    return context.dataset.data[context.dataIndex] === 0 ?
                         0 : // No radius
                         5;
                 },
                 borderWidth: 2,
                 pointHoverRadius: (context) => {
                     // Hide hover effect for zero values
-                    return context.dataset.data[context.dataIndex] === 0 ? 
+                    return context.dataset.data[context.dataIndex] === 0 ?
                         0 : // No hover radius
                         7;
                 }
@@ -855,10 +858,10 @@ window.onload = function () {
         traffic: [{ live_speeds: 0, free_flow_speeds: 0, confidence: 0, incidents: 0, road_closure: false }],
         car: [{ current_speed: 0, current_speed_limit: 0 }]
     });
-    
+
     createThresholdRadar(2, {
         weather: [{ weather_conditions: "Clear", visibility: 10, temperatures: 0 }],
-        traffic: [{ live_speeds: 0, free_flow_speeds: 0, confidence: 0, incidents: 0, road_closure: false}],
+        traffic: [{ live_speeds: 0, free_flow_speeds: 0, confidence: 0, incidents: 0, road_closure: false }],
         car: [{ current_speed: 0, current_speed_limit: 0 }]
     });
 };
