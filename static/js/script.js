@@ -756,13 +756,15 @@ function createThresholdRadar(instanceId, data) {
                 label: 'Threshold Contributors',
                 data: Object.values(factors),
                 backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                borderColor: labelColors.map(color => `${color}CC`),
+                borderColor: '#000000', // Black connecting line
+                borderWidth: 2, // Line thickness
                 pointBackgroundColor: (context) => {
                     // Hide points with value 0
                     return context.dataset.data[context.dataIndex] === 0 ? 
                         'rgba(0,0,0,0)' : // Transparent
                         labelColors[context.dataIndex];
                 },
+                pointBorderColor: '#000000', // Black point borders
                 pointRadius: (context) => {
                     // Hide points with value 0
                     return context.dataset.data[context.dataIndex] === 0 ? 
@@ -785,7 +787,7 @@ function createThresholdRadar(instanceId, data) {
                 r: {
                     angleLines: {
                         display: true,
-                        color: 'rgba(200, 200, 200, 0.2)'
+                        color: 'rgba(200, 200, 200, 0)'
                     },
                     suggestedMin: 0,
                     suggestedMax: 20,
