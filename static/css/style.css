@@ -1,278 +1,333 @@
-body {
-    font-family: Arial, sans-serif;
+:root {
+    --primary: #6200ea;
+    --primary-light: #9e47ff;
+    --primary-dark: #0400ba;
+    --secondary: #03dac6;
+    --background: #f8f9fa;
+    --card-bg: #ffffff;
+    --text: #2d3748;
+    --text-light: #718096;
+    --success: #4caf50;
+    --warning: #ff9800;
+    --danger: #f44336;
+    --border-radius: 12px;
+    --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: var(--background);
+    color: var(--text);
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    background-color: #f4f4f9;
-    min-height: 100vh;
-    /* height yerine min-height */
-    overflow-x: hidden;
-    /* Sadece yatay scroll'u engelle */
-}
-
-.header {
+    line-height: 1.6;
+  }
+  
+  .header {
     width: 100%;
-    background-color: #6200ea;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
     color: white;
-    padding: 15px 20px;
-    /* Daha dengeli padding */
+    padding: 1.2rem 2rem;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow);
     position: sticky;
-    /* Sabit baÅŸlÄ±k */
     top: 0;
     z-index: 100;
-}
-
-.container {
-    display: flex;
-    width: 100%;
-    min-height: calc(100vh - 80px);
-    padding: 20px;
-    box-sizing: border-box;
-    gap: 25px;
-    overflow: visible;
-    /* Scroll'u kaldÄ±rdÄ±k */
-}
-
-.instance {
-    flex: 1;
-    min-width: 650px;
-    /* Daha geniÅŸ minimum geniÅŸlik */
-    background-color: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    overflow: visible;
-    /* Ä°Ã§ scroll'u kaldÄ±rdÄ±k */
-    position: relative;
-    /* Harita iÃ§in referans */
-    z-index: 10;
-}
-
-.instance h2 {
-    margin-top: 0;
-    color: #6200ea;
-    align-self: flex-start;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
-    /* BaÅŸlÄ±ÄŸÄ± sola yasla */
-}
-
-.instance label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: bold;
-    color: #333;
-    align-self: flex-start;
-    /* Sola yasla */
-    width: 100%;
-    /* Tam geniÅŸlik */
-}
-
-.instance select {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    cursor: pointer;
-    margin-bottom: 20px;
-    transition: border-color 0.3s;
-    /* Daha smooth hover efekti */
-}
-
-.instance select:hover {
-    border-color: #6200ea;
-}
-
-.chart-container {
-    width: 100%;
-    height: 300px;
-    /* Sabit yÃ¼kseklik */
-    margin-bottom: 20px;
-    position: relative;
-    /* Chart.js iÃ§in gerekli */
-}
-
-#map-1,
-#map-2 {
-    width: 100%;
-    height: 400px;
-    /* Daha yÃ¼ksek harita */
-    border-radius: 10px;
-    margin: 20px 0;
-    border: 2px solid #e0e0e0;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    background-color: #f8f9fa;
-    position: relative;
-    /* Zoom iÃ§in gerekli */
-    z-index: 5;
-    /* DiÄŸer elementlerin Ã¼stÃ¼nde */
-    transform-origin: center center;
-    /* DÃ¼zgÃ¼n zoom iÃ§in */
-}
-
-.leaflet-control {
-    background-color: rgba(255, 255, 255, 0.9) !important;
-    border-radius: 4px !important;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1) !important;
-    padding: 5px !important;
-}
-
-.car-marker {
-    width: 32px !important;
-    height: 32px !important;
-    background-size: contain !important;
-    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
-    /* Ä°kona gÃ¶lge efekti */
-}
-
-canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
-
-.data-container {
+  }
+  
+  .header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  
+  .container {
     display: flex;
     flex-wrap: wrap;
-    /* KÃ¼Ã§Ã¼k ekranlarda satÄ±r atlama */
-    justify-content: space-between;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1800px;
+    margin: 0 auto;
     width: 100%;
-    margin-bottom: 20px;
-    gap: 15px;
-    /* Elemanlar arasÄ± boÅŸluk */
-}
+    box-sizing: border-box;
+  }
+  
+  .instance {
+    flex: 1;
+    min-width: 650px;
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-direction: column;
+  }
 
-.data-section {
-    flex: 1 1 300px;
-    /* Esnek ama minimum 300px */
-    padding: 15px;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    min-height: 150px;
-    /* Minimum yÃ¼kseklik */
-    overflow: auto;
-    /* Fazla iÃ§erik iÃ§in scroll */
-}
-
-.data-section h3 {
-    margin-top: 0;
-    color: #6200ea;
-    border-bottom: 1px solid #eee;
-    /* Alt Ã§izgi eklendi */
-    padding-bottom: 8px;
-}
-
-.data-section pre {
+  
+  .instance h2 {
+    color: var(--primary);
+    margin: 0 0 1.5rem 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .instance h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 3px;
+  }
+  
+  .instance h3 {
+    color: var(--primary);
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+  }
+  
+  .instance label {
+    display: block;
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+  
+  .instance select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid #e2e8f0;
+    font-size: 1rem;
+    background-color: var(--card-bg);
+    color: var(--text);
+    cursor: pointer;
+    margin-bottom: 1.5rem;
+    transition: var(--transition);
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1rem;
+  }
+  
+  .instance select:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(98, 0, 234, 0.1);
+  }
+  
+  .chart-container {
+    width: 100%;
+    height: 300px;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+  
+  #map-1, #map-2 {
+    width: 100%;
+    height: 400px;
+    border-radius: var(--border-radius);
+    margin: 1.5rem 0;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    background-color: #f8f9fa;
+  }
+  
+  .data-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .data-section {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-section:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .data-section h3 {
+    margin: 0 0 1rem 0;
+    color: var(--primary);
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .data-section pre {
     white-space: pre-wrap;
     word-wrap: break-word;
-    background-color: #fff;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    overflow-x: auto;
+    background-color: rgba(245, 245, 245, 0.7);
+    padding: 1rem;
+    border-radius: 8px;
     margin: 0;
-    font-size: 14px;
-}
-
-.arrival-status {
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 5px;
-    font-weight: bold;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--text);
+    border-left: 3px solid var(--primary-light);
+  }
+  
+  .arrival-status {
+    padding: 0.8rem 1rem;
+    margin: 1rem 0;
+    border-radius: var(--border-radius);
+    font-weight: 600;
     text-align: center;
-    width: 100%;
-    background-color: #f0f0f0;
-    border: 1px solid #ddd;
+    background-color: rgba(98, 0, 234, 0.1);
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+  }
+  
+  .arrival-status.arrived {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success);
+    border-left-color: var(--success);
+  }
+
+  .arrival-status.in-transit {
+    background-color: #2196F3;
+    color: white;
 }
-
-.car-marker {
-    background: transparent;
-    border: none;
-}
-
-/* Responsive dÃ¼zenlemeler */
-@media (max-width: 1200px) {
-    .container {
-        flex-direction: column;
-    }
-
-    .instance {
-        min-width: 100%;
-        max-height: none;
-    }
-}
-
-@media (max-width: 768px) {
-    .data-section {
-        flex: 1 1 100%;
-    }
-
-    .chart-container,
-    #map-1,
-    #map-2 {
-        height: 250px;
-    }
-}
-
-/* Scrollbar stilizasyonu */
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #555;
-}
-
-.leaflet-polyline {
-    stroke-width: 4px !important;
-    stroke-opacity: 0.8 !important;
-}
-
-/* Zoom kontrolleri */
-.leaflet-control-zoom {
+  
+  .light-status {
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+  }
+  
+  .light-status.on {
+    background-color: var(--success);
+    color: white;
+  }
+  
+  .light-status.off {
+    background-color: var(--danger);
+    color: white;
+  }
+  
+  .leaflet-control {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--box-shadow) !important;
+    padding: 0.5rem !important;
+  }
+  
+  .leaflet-control-zoom {
     margin-right: 15px !important;
     margin-bottom: 15px !important;
-}
-
-.car-data-line {
-    margin-bottom: 3px;
-    /* Consistent spacing */
-    display: block;
-    /* Ensure each is on own line */
-}
-
-.light-status {
-    padding: 2px 6px;
-    border-radius: 3px;
-    font-weight: bold;
-}
-
-.light-status.on {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.light-status.off {
-    background-color: #F44336;
-    color: white;
-}
+  }
+  
+  .leaflet-popup-content {
+    font-family: 'Segoe UI', Roboto, sans-serif !important;
+  }
+  
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--primary-light);
+    border-radius: 10px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 1200px) {
+    .container {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .instance {
+      width: 100%;
+      max-width: 800px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .header h1 {
+      font-size: 1.5rem;
+    }
+    
+    .instance {
+      min-width: 100%;
+      padding: 1.5rem;
+    }
+    
+    .data-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .chart-container, #map-1, #map-2 {
+      height: 300px;
+    }
+  }
+  
+  /* Animation for data updates */
+  @keyframes pulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+  }
+  
+  .updating {
+    animation: pulse 1.5s infinite;
+  }
+  
+  /* Tooltip styling */
+  .tooltip {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 200px;
+    background-color: var(--text);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+  }
