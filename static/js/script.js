@@ -49,25 +49,71 @@ function updateCarPosition(instanceId, lat, lng) {
 
 // Function to populate dropdown menus
 async function loadFiles(dropdownId) {
-    const baseUrl = '/ports/12879/data/';
-    const response = await fetch(baseUrl);
-    const text = await response.text();
-    const parser = new DOMParser();
-    const htmlDoc = parser.parseFromString(text, 'text/html');
-    const links = htmlDoc.querySelectorAll('a');
-
     const dropdown = document.getElementById(dropdownId);
-    links.forEach(link => {
+    
+    // Keep the first option (default) and remove others
+    while (dropdown.options.length > 1) {
+      dropdown.remove(1);
+    }
+  
+    try {
+      const response = await fetch('/ports/12879/data/');
+      const text = await response.text();
+      const parser = new DOMParser();
+      const htmlDoc = parser.parseFromString(text, 'text/html');
+      const links = htmlDoc.querySelectorAll('a');
+  
+      links.forEach(link => {
         const href = link.getAttribute('href');
         if (href && href.startsWith('/data/historical_data_')) {
-            const option = document.createElement('option');
-            option.value = '/ports/12879' + href;
-            option.textContent = href.replace('/data/historical_data_', ''); // Remove "/data/" from display
-            dropdown.appendChild(option);
+          const option = new Option(
+            href.replace('/data/historical_data_', ''),
+            '/ports/12879' + href
+          );
+          dropdown.add(option);
         }
-    });
-}
+      });
+  
+      // Reset to default selection
+      dropdown.selectedIndex = 0;
+      
+    } catch (error) {
+      console.error('Error loading files:', error);
+      const errorOption = new Option('Error loading files', '');
+      dropdown.add(errorOption);
+    }
+  }
 
+  
+
+  async function reloadFiles(instanceId) {
+    const dropdownId = `file-select-${instanceId}`;
+    const dropdown = document.getElementById(dropdownId);
+    
+    // Clear existing options
+    while (dropdown.options.length > 1) {
+      dropdown.remove(1);
+    }
+    
+    // Reload files
+    await loadFiles(dropdownId);
+    
+    dropdown.selectedIndex = 0;
+  }
+  
+  // Add click handlers to all reload buttons
+  document.querySelectorAll('.reload-btn').forEach(button => {
+    button.addEventListener('click', async () => {
+      const instanceId = button.getAttribute('data-instance');
+      button.disabled = true;
+      button.textContent = 'Loading...';
+      
+      await reloadFiles(instanceId);
+      
+      button.disabled = false;
+      button.textContent = 'Reload';
+    });
+  });
 
 function calculateExactReduction(threshold) {
     // Cap threshold at 50 first
