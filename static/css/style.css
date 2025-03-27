@@ -385,3 +385,29 @@ body {
     padding: 2px 5px;
     border-radius: 3px;
 }
+
+.file-selector {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.file-selector label {
+  white-space: nowrap;
+}
+
+.file-selector select {
+  flex-grow: 1;
+  min-width: 200px;
+}
+
+.reload-btn {
+  padding: 6px 12px;
+  white-space: nowrap;
+}
+
+.file-dropdown:empty::before {
+  content: attr(placeholder);
+  color: #999;
+}
