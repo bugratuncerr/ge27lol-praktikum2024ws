@@ -559,9 +559,11 @@ async function loadDataAndUpdateChart(dropdownId, instanceId) {
     dropdown.addEventListener('change', async function () {
         const fileUrl = this.value;
         if (!fileUrl) return;
-
         try {
-            const response = await fetch(fileUrl);
+            const response = await fetch(fileUrl, {
+                cache: 'no-store' //Cache prevention
+            });
+
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const jsonData = await response.json();
 
@@ -712,12 +714,12 @@ function calculateRoadClosureContribution(data) {
 function calculateVisibilityContribution(data) {
     const vis = data.weather.visibility;
     const weather = data.weather.weather_conditions;
+    if (vis > 5 && vis < 10) return 1;
     if (["Fog", "Mist", "Heavy snow", "Blizzard", "Blowing snow", "Freezing fog"].includes(weather)) return 0;
     if (vis <= 0.5) return 15;
     if (vis <= 1) return 10;
     if (vis <= 3) return 5;
     if (vis <= 5) return 2;
-    if (vis < 10) return 1;
     return 0;
 }
 
