@@ -7,6 +7,7 @@ from config import TOMTOM_API_KEY, TOMTOM_API_URL_FLOW, WEATHER_API_KEY, WEATHER
 
 FILE_PATH = "route_data.json"
 
+#Returns the traffic response from the tomtom api with the given coordinates
 def fetch_traffic_data(latitude, longitude,instance_id):
     traffic_url = f'{TOMTOM_API_URL_FLOW}?point={latitude}%2C{longitude}&unit=KMPH&openLr=false&key={TOMTOM_API_KEY}'
     response = requests.get(traffic_url)
@@ -26,6 +27,7 @@ def fetch_traffic_data(latitude, longitude,instance_id):
 
     return {}
 
+#Returns the weather response from the weather api with the given coordinates
 def fetch_weather_data(latitude, longitude,instance_id):
     weather_url = f'{WEATHER_API_URL}?key={WEATHER_API_KEY}&q={latitude},{longitude}'
     response = requests.get(weather_url)
@@ -45,6 +47,7 @@ def fetch_weather_data(latitude, longitude,instance_id):
 
     return {}
 
+#Returns the coordinates response from the tomtom api with the given city
 def fetch_coordinates(city):
     geocode_url = f'https://api.tomtom.com/search/2/geocode/{city}.json?key={TOMTOM_API_KEY}'
     response = requests.get(geocode_url)
@@ -55,8 +58,7 @@ def fetch_coordinates(city):
     return None, None  # Return None if city not found
 
 
-
-
+#Returns the coordinates response from the tomtom api with the given city names
 def get_coordinates(cities):
     if len(cities) != 2:
         return None, None, "Exactly two city names are required"
