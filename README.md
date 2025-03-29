@@ -28,7 +28,7 @@ Keys should be placed in `config.py`.
 - **Bottle web framework**
 - **Gevent for async support**
 
-## Installation
+## Installation and How to Run
 
 1. **Clone the repository**:
    ```sh
@@ -46,6 +46,17 @@ Keys should be placed in `config.py`.
    python3 app.py
 
 5. **The program will run on the 12879 port by default**
-6. **To access the website, use the link**:
+
+6. **Open the CPEE model page**
+
+7. **Load the given testset**
+
+8. **Set waypoints(eg: Munich,Salzburg) and instance_id(with the current process instance id) fields in Data Elements section**
+
+9. **Press start from the Execution section**
+
+10. **To access the website, use the link**:
    ```sh
    https://lehre.bpm.in.tum.de/ports/12879/dashboard
+
+11. **To see the historical data and real time data updates select the file with the given instance_id**
