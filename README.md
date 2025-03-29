@@ -35,6 +35,11 @@ Keys should be placed in `config.py`.
    git clone https://github.com/bugratuncerr/praktikum2024ws.git
    cd praktikum2024ws
 
+1.  **Or you can directly access the code in the lehre server**:
+   ```sh 
+   cd /srv/gruppe/students/ge27lol/public_html/Route-Analysis-Project/
+   ```
+    
 2. **Install required Python packages**:
    ```sh
     pip install bottle gevent requests
