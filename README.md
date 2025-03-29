@@ -39,27 +39,25 @@ Keys should be placed in `config.py`.
    ```sh
     pip install bottle gevent requests
 
-3. **Configure API keys in config.py.**
-
-4. **Run the application**:
+3. **Run the application**:
     ```sh
    python3 app.py
 
-5. **The program will run on the 12879 port by default**
+4. **The program will run on the 12879 port by default**
 
-6. **Open the CPEE model page**
+5. **Open the CPEE model page**
 
-7. **Load the given testset**
+6. **Load the given testset**
 
-8. **Set waypoints(eg: Munich,Salzburg) and instance_id(with the current process instance id) fields in Data Elements section**
+7. **Set waypoints(eg: Munich,Salzburg) and instance_id(with the current process instance id) fields in Data Elements section**
 
-9. **Press start from the Execution section**
+8. **Press start from the Execution section**
 
-10. **To access the website, use the link**:
+9. **To access the website, use the link**:
    ```sh
    https://lehre.bpm.in.tum.de/ports/12879/dashboard
    ```
-11. **To being able see the historical data and real time data updates, select the file with the given instance_id**
+10. **To being able see the historical data and real time data updates, select the file with the given instance_id**
 
 
 
