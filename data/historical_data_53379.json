@@ -1,0 +1,1376 @@
+{
+    "weather": [
+        {
+            "location": "Munich",
+            "temperatures": 1.3,
+            "weather_conditions": "Mist",
+            "last_updated": "2025-03-28 01:15",
+            "visibility": 6.0,
+            "timestamps": "2025-03-28 01:23:49",
+            "instance_id": 53379
+        },
+        {
+            "location": "Munich",
+            "temperatures": 1.3,
+            "weather_conditions": "Mist",
+            "last_updated": "2025-03-28 01:15",
+            "visibility": 6.0,
+            "timestamps": "2025-03-28 01:25:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Munich",
+            "temperatures": 1.3,
+            "weather_conditions": "Mist",
+            "last_updated": "2025-03-28 01:15",
+            "visibility": 6.0,
+            "timestamps": "2025-03-28 01:27:01",
+            "instance_id": 53379
+        },
+        {
+            "location": "Munich",
+            "temperatures": 1.3,
+            "weather_conditions": "Mist",
+            "last_updated": "2025-03-28 01:15",
+            "visibility": 6.0,
+            "timestamps": "2025-03-28 01:29:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Taufkirchen",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:15",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:31:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Unterhaching",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:33:01",
+            "instance_id": 53379
+        },
+        {
+            "location": "Unterhaching",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:35:01",
+            "instance_id": 53379
+        },
+        {
+            "location": "Unterhaching",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:36:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Unterhaching",
+            "temperatures": 3.0,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 01:38:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Oberhaching",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:40:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Holzkirchen",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:42:01",
+            "instance_id": 53379
+        },
+        {
+            "location": "Holzkirchen",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:44:01",
+            "instance_id": 53379
+        },
+        {
+            "location": "Holzkirchen",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:46:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Feldkirchen-Westerham",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:48:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Feldkirchen-Westerham",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:30",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:50:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Feldkirchen-Westerham",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:52:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Bruckm\u00fchl",
+            "temperatures": 2.2,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 0.8,
+            "timestamps": "2025-03-28 01:54:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Bad Aibling",
+            "temperatures": 3.0,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 01:56:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Bad Aibling",
+            "temperatures": 3.0,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 01:58:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Kolbermoor",
+            "temperatures": 3.0,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 01:45",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 02:00:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Kolbermoor",
+            "temperatures": 3.1,
+            "weather_conditions": "Fog",
+            "last_updated": "2025-03-28 02:00",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 02:02:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Raubling",
+            "temperatures": -1.3,
+            "weather_conditions": "Clear",
+            "last_updated": "2025-03-28 02:00",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 02:04:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Rosenheim",
+            "temperatures": -1.3,
+            "weather_conditions": "Clear",
+            "last_updated": "2025-03-28 02:00",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 02:06:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Rosenheim",
+            "temperatures": -1.3,
+            "weather_conditions": "Clear",
+            "last_updated": "2025-03-28 02:00",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 02:08:02",
+            "instance_id": 53379
+        },
+        {
+            "location": "Rosenheim",
+            "temperatures": -1.3,
+            "weather_conditions": "Clear",
+            "last_updated": "2025-03-28 02:00",
+            "visibility": 10.0,
+            "timestamps": "2025-03-28 02:10:02",
+            "instance_id": 53379
+        }
+    ],
+    "traffic": [
+        {
+            "incidents": 0,
+            "live_speeds": 16,
+            "free_flow_speeds": 16,
+            "road_closure": true,
+            "confidence": 0.716496,
+            "timestamps": "2025-03-28 01:23:50",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 16,
+            "free_flow_speeds": 16,
+            "road_closure": true,
+            "confidence": 0.720287,
+            "timestamps": "2025-03-28 01:25:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 17,
+            "free_flow_speeds": 17,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:27:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 102,
+            "free_flow_speeds": 102,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:29:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 109,
+            "free_flow_speeds": 109,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:31:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 110,
+            "free_flow_speeds": 110,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:33:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 127,
+            "free_flow_speeds": 127,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:35:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 131,
+            "free_flow_speeds": 131,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:37:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 135,
+            "free_flow_speeds": 135,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:39:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 135,
+            "free_flow_speeds": 135,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:41:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 134,
+            "free_flow_speeds": 134,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:43:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 134,
+            "free_flow_speeds": 134,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:45:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 122,
+            "free_flow_speeds": 122,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:47:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 122,
+            "free_flow_speeds": 122,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:49:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 122,
+            "free_flow_speeds": 122,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:51:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 115,
+            "free_flow_speeds": 115,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:53:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 120,
+            "free_flow_speeds": 120,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:55:03",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 120,
+            "free_flow_speeds": 120,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:57:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 120,
+            "free_flow_speeds": 120,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 01:59:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 133,
+            "free_flow_speeds": 133,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 02:01:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 119,
+            "free_flow_speeds": 119,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 02:03:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 63,
+            "free_flow_speeds": 63,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 02:05:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 63,
+            "free_flow_speeds": 63,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 02:07:01",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 45,
+            "free_flow_speeds": 45,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 02:09:02",
+            "instance_id": 53379
+        },
+        {
+            "incidents": 0,
+            "live_speeds": 32,
+            "free_flow_speeds": 32,
+            "road_closure": false,
+            "confidence": 1,
+            "timestamps": "2025-03-28 02:11:03",
+            "instance_id": 53379
+        }
+    ],
+    "car": [
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.139156,
+            "current_longitude": 11.580208,
+            "current_speed": 16,
+            "current_speed_limit": 30,
+            "fog_lights": false,
+            "lights": false,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 0,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:23:50",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.139156,
+            "current_longitude": 11.580208,
+            "current_speed": 19,
+            "current_speed_limit": 30,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 28,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:24:00",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.139156,
+            "current_longitude": 11.580208,
+            "current_speed": 19,
+            "current_speed_limit": 30,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 28,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:24:01",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.135062,
+            "current_longitude": 11.582303,
+            "current_speed": 32,
+            "current_speed_limit": 50,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 28,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:25:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.131492,
+            "current_longitude": 11.588048,
+            "current_speed": 32,
+            "current_speed_limit": 50,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 28,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:26:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.124755,
+            "current_longitude": 11.600325,
+            "current_speed": 32,
+            "current_speed_limit": 50,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 28,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:27:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.115992,
+            "current_longitude": 11.612736,
+            "current_speed": 44,
+            "current_speed_limit": 50,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 11,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:28:01",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.104854,
+            "current_longitude": 11.613783,
+            "current_speed": 89,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 11,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:29:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.092289,
+            "current_longitude": 11.615488,
+            "current_speed": 89,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 11,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:30:01",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.08224,
+            "current_longitude": 11.618272,
+            "current_speed": 89,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 11,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:31:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.072539,
+            "current_longitude": 11.626406,
+            "current_speed": 90,
+            "current_speed_limit": 80,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:32:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.061877,
+            "current_longitude": 11.636695,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:33:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.049683,
+            "current_longitude": 11.646271,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:34:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.041585,
+            "current_longitude": 11.650287,
+            "current_speed": 126,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:35:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.030489,
+            "current_longitude": 11.655814,
+            "current_speed": 90,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:36:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.014825,
+            "current_longitude": 11.664507,
+            "current_speed": 90,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:37:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 48.001263,
+            "current_longitude": 11.673754,
+            "current_speed": 90,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:38:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.985496,
+            "current_longitude": 11.682227,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:39:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.970929,
+            "current_longitude": 11.686321,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:40:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.953976,
+            "current_longitude": 11.693121,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:41:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.937705,
+            "current_longitude": 11.703634,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:42:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.917643,
+            "current_longitude": 11.713737,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:43:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.906194,
+            "current_longitude": 11.718332,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:44:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.893173,
+            "current_longitude": 11.72749,
+            "current_speed": 126,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:45:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.887573,
+            "current_longitude": 11.740138,
+            "current_speed": 90,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:46:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.876705,
+            "current_longitude": 11.766916,
+            "current_speed": 90,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:47:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.868571,
+            "current_longitude": 11.78703,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:48:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.865089,
+            "current_longitude": 11.811548,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:49:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.861472,
+            "current_longitude": 11.84521,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:50:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.857171,
+            "current_longitude": 11.855977,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:51:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.844212,
+            "current_longitude": 11.8678,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:52:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.828088,
+            "current_longitude": 11.897415,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:53:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.830384,
+            "current_longitude": 11.905691,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:54:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.825133,
+            "current_longitude": 11.940139,
+            "current_speed": 90,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:55:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.826723,
+            "current_longitude": 11.952339,
+            "current_speed": 90,
+            "current_speed_limit": 100,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:56:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.821758,
+            "current_longitude": 11.970965,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:57:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.821674,
+            "current_longitude": 11.993349,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:58:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.816562,
+            "current_longitude": 12.048569,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 01:59:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.816562,
+            "current_longitude": 12.048569,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:00:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.814753,
+            "current_longitude": 12.06334,
+            "current_speed": 126,
+            "current_speed_limit": -1,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:01:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.810955,
+            "current_longitude": 12.08917,
+            "current_speed": 126,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:02:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.807886,
+            "current_longitude": 12.116118,
+            "current_speed": 108,
+            "current_speed_limit": 120,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 10,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:03:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.81191,
+            "current_longitude": 12.118759,
+            "current_speed": 76,
+            "current_speed_limit": 80,
+            "fog_lights": true,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:04:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.827087,
+            "current_longitude": 12.123512,
+            "current_speed": 76,
+            "current_speed_limit": 80,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:05:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.828223,
+            "current_longitude": 12.123405,
+            "current_speed": 76,
+            "current_speed_limit": 60,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:06:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.83667,
+            "current_longitude": 12.121081,
+            "current_speed": 48,
+            "current_speed_limit": 50,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:07:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.845915,
+            "current_longitude": 12.124887,
+            "current_speed": 48,
+            "current_speed_limit": 50,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:08:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.851493,
+            "current_longitude": 12.131771,
+            "current_speed": 48,
+            "current_speed_limit": 50,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:09:02",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.855638,
+            "current_longitude": 12.125012,
+            "current_speed": 48,
+            "current_speed_limit": 50,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": false,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:10:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.856079,
+            "current_longitude": 12.124025,
+            "current_speed": 48,
+            "current_speed_limit": 50,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": true,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:11:03",
+            "instance_id": 53379
+        },
+        {
+            "car_id": "42b0cb94-c943-4e2c-b739-95cff0437f2d",
+            "current_latitude": 47.856079,
+            "current_longitude": 12.124025,
+            "current_speed": 0,
+            "current_speed_limit": 50,
+            "fog_lights": false,
+            "lights": true,
+            "arrived": true,
+            "break_time": 0,
+            "current_threshold": 5,
+            "waypoints": [
+                "Munich",
+                "Rosenheim"
+            ],
+            "timestamp": "2025-03-28 02:13:02",
+            "instance_id": 53379
+        }
+    ]
+}
