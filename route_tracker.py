@@ -25,6 +25,7 @@ class RouteTracker:
         self._tracking_thread = None
         self._shutdown_flag = False
 
+    #Returns the current location of the car
     def get_current_location(self, elapsed_time):
         if not self.coordinates or not self.routes:
             return None
@@ -54,6 +55,7 @@ class RouteTracker:
         
         return self.coordinates[-1] 
     
+    #Returns the initial_route_instanceid.json file and starts the car position tracking loop
     def fetch_route_data(self, waypoints):
         if len(waypoints) != 4:
             return None, None, "Invalid waypoints"
@@ -108,6 +110,7 @@ class RouteTracker:
         except requests.exceptions.RequestException as e:
             return None, None, f"API request failed: {str(e)}"
 
+    #Stops the tracking thread
     def _stop_tracking_thread(self):
         with self._lock:
             if self._tracking_thread and self._tracking_thread.is_alive():
@@ -119,6 +122,7 @@ class RouteTracker:
             if self._tracking_thread.is_alive():
                 print(f"Warning: Tracking thread for car {self.car.instance_id} didn't shut down cleanly")
 
+    #Tracking thread to update car location
     def _tracking_loop(self):
         while not self._shutdown_flag:
             with self._lock:
@@ -161,6 +165,7 @@ class RouteTracker:
 
         print(f"Tracking stopped for car {self.car.instance_id}")
 
+    #Pauses the updates for the car, based on CPEE states
     def pause_updates(self):
         with self._lock:
             if not self.paused:
@@ -170,6 +175,7 @@ class RouteTracker:
                     self.elapsed_before_pause += time.time() - self.start_time
                 self._pause_cond.notify_all()
 
+    #Resumes the updates for the car, based on CPEE states
     def resume_updates(self):
         with self._lock:
             if self.paused:

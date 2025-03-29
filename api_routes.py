@@ -14,6 +14,7 @@ trackers = {}
 all_data = {}
 historical_data = {}
 
+#Updates the car speed with the given instance id
 def update_car_speed():
     global cars
     try:
@@ -31,6 +32,7 @@ def update_car_speed():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
+#Gets the car with a given instance_id. If none exists, create a new one
 def get_instance_id():
     try:
         global cars
@@ -52,19 +54,7 @@ def get_instance_id():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
-def update_car_break_time():
-    try:
-        data = request.forms.decode()
-        instance_id = int(data.get("instance_id"))
-        if cars[instance_id].break_time == int(data.get("break_time", cars[instance_id].break_time)):
-            return HTTPResponse(status=200, body=json.dumps({'message': 'Car break time remains the same.', 'car': cars[instance_id].get_state()}), headers={'content-type': 'application/json'})
-        else:
-            cars[instance_id].update_break_time(int(data.get("break_time", cars[instance_id].break_time)))
-            return HTTPResponse(status=200, body=json.dumps({'message': 'Car break time updated successfully.', 'car': cars[instance_id].get_state()}), headers={'content-type': 'application/json'})
-    except Exception as e:
-        return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
-
-
+#Turns on/off the car headlights
 def update_car_lights():
     try:
         data = request.forms.decode()
@@ -81,7 +71,7 @@ def update_car_lights():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
-
+#Turns on/off the car fog lights
 def update_car_fog_lights():
     try:
         data = request.forms.decode()
@@ -99,7 +89,7 @@ def update_car_fog_lights():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
-
+#Gets the car by given instance_id
 def get_car_state():
     try:
         instance_id = int(request.query.get("instance_id"))
@@ -107,6 +97,8 @@ def get_car_state():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
+
+#Within given city names, return their coordinates
 def get_city_coordinates():
     cities = request.query.getall('city')  # Accept multiple cities as query parameters
     lat1, lon1, lat2, lon2 = get_coordinates(cities)
@@ -125,6 +117,8 @@ def get_city_coordinates():
         headers={'content-type': 'application/json'}
     )
 
+
+#Within the given coordinates, returns the distance and travel time
 def get_routes():
     global cars
     global trackers
@@ -163,6 +157,8 @@ def get_routes():
     except Exception as e:
         return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
+
+#Returns the Traffic api response with the given coordinates
 def get_traffic_data():
     latitude = request.query.latitude
     longitude = request.query.longitude
@@ -174,6 +170,8 @@ def get_traffic_data():
     traffic_data = fetch_traffic_data(latitude, longitude, instance_id)
     return HTTPResponse(status=200, body=json.dumps(traffic_data), headers={'content-type': 'application/json'})
 
+
+#Returns the Weather api response with the given coordinates
 def get_weather_data():
     latitude = request.query.latitude
     longitude = request.query.longitude
@@ -185,16 +183,8 @@ def get_weather_data():
     weather_data = fetch_weather_data(latitude, longitude, instance_id)
     return HTTPResponse(status=200, body=json.dumps(weather_data), headers={'content-type': 'application/json'})
 
-def get_last_location():
-    try:
-        instance_id = int(request.query.get("instance_id"))
-        if instance_id in trackers:
-            last_location = trackers[instance_id].get_last_location()
-            return HTTPResponse(status=200, body=json.dumps({'last_location': last_location}), headers={'content-type': 'application/json'})
-        return HTTPResponse(status=404, body=json.dumps({'error': 'RouteTracker instance not found'}), headers={'content-type': 'application/json'})
-    except Exception as e:
-        return HTTPResponse(status=500, body=json.dumps({'error': str(e)}), headers={'content-type': 'application/json'})
 
+#Listens the CPEE responses, parses the data and stores them into global variable
 def record():
     global all_data
     global historical_data
@@ -279,7 +269,7 @@ def record():
         if(instance_id != 0):
             write_to_json_historical(f'historical_data_{str(instance_id)}.json', historical_data[instance_id])
 
-
+#Server sent event to get last updated data in frontend
 def sse():
     response.content_type = 'text/event-stream'
     response.cache_control = 'no-cache'
