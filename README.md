@@ -58,5 +58,9 @@ Keys should be placed in `config.py`.
 10. **To access the website, use the link**:
    ```sh
    https://lehre.bpm.in.tum.de/ports/12879/dashboard
+   ```
+11. **To being able see the historical data and real time data updates, select the file with the given instance_id**
 
-11. **To see the historical data and real time data updates select the file with the given instance_id**
+
+
+
