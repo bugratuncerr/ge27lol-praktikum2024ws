@@ -32,8 +32,8 @@ Keys should be placed in `config.py`.
 
 1. **Clone the repository**:
    ```sh
-   git clone https://github.com/bugratuncerr/praktikum2024ws.git
-   cd praktikum2024ws
+   git clone https://github.com/bugratuncerr/ge27lol-praktikum2024ws.git
+   cd ge27lol-praktikum2024ws
 
 1.  **Or you can directly access the code in the lehre server**:
    ```sh 
