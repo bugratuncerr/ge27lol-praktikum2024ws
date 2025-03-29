@@ -1,101 +1,51 @@
-# praktikum2024ws
-Car Tracking System
+# Route Analysis and Runtime Process Visualization - praktikum2024ws
 
 A web-based application that tracks car routes, traffic conditions, and weather data in real-time using various APIs.
-Features
 
-    Real-time car tracking with route visualization
+## Features
 
-    Traffic condition monitoring (speed limits, incidents, road closures)
+- Real-time car tracking with route visualization
+- Traffic condition monitoring (speed limits, incidents, road closures)
+- Weather data integration (temperature, conditions, visibility)
+- Multiple car instance management
+- Historical data recording
+- Server-Sent Events (SSE) for real-time updates
+- REST API for data access and control
 
-    Weather data integration (temperature, conditions, visibility)
+## API Keys Required
 
-    Multiple car instance management
+This application uses the following services, which require API keys:
 
-    Historical data recording
+- **TomTom Traffic API**
+- **WeatherAPI**
+- **Geoapify Routing API**
 
-    Server-Sent Events (SSE) for real-time updates
+Keys should be placed in `config.py`.
 
-    REST API for data access and control
+## Dependencies
 
-API Keys Required
+- **Python 3.x**
+- **Bottle web framework**
+- **Gevent for async support**
 
-This application uses the following services which require API keys:
+## Installation
 
-    TomTom Traffic API
+1. **Clone the repository**:
+   ```sh
+   git clone https://github.com/bugratuncerr/praktikum2024ws.git
+   cd praktikum2024ws
 
-    WeatherAPI
-
-    Geoapify Routing API
-
-Keys should be placed in config.py
-Installation
-
-    Clone the repository
-
-    Install required Python packages:
-    Copy
-
+2. **Install required Python packages**:
+   ```sh
     pip install bottle gevent requests
 
-    Configure API keys in config.py
+3. **Configure API keys in config.py.**
 
-    Run the application:
-    Copy
+4. **Run the application**:
+    ```sh
+   python3 app.py
 
-    python app.py
-
-API Endpoints
-Car Control
-
-    POST /update_car_speed - Update car speed
-
-    POST /update_car_lights - Toggle headlights
-
-    POST /update_car_fog_lights - Toggle fog lights
-
-    POST /update_instance_id - Create/update car instance
-
-Data Access
-
-    GET /get_car_state - Get current car state
-
-    GET /get_traffic_data - Get traffic data
-
-    GET /get_weather_data - Get weather data
-
-    GET /get_city_coordinates - Get coordinates for cities
-
-    GET /get_route_data - Get route information
-
-Real-time Updates
-
-    GET /sse - Server-Sent Events endpoint
-
-    POST / - CPEE webhook endpoint
-
-Web Interface
-
-    GET /dashboard - Web dashboard
-
-    GET /data - Access recorded data files
-
-Data Storage
-
-All recorded data is stored in the data/ directory, including:
-
-    Historical traffic/weather/car data
-
-    Route coordinates
-
-    Initial route configurations
-
-Dependencies
-
-    Python 3.x
-
-    Bottle web framework
-
-    Gevent for async support
-
-    Requests for API calls
+5. **The program will run on the 12879 port by default**
+6. **To access the website, use the link**:
+   ```sh
+   https://lehre.bpm.in.tum.de/ports/12879/dashboard
