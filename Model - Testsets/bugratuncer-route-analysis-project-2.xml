@@ -1,0 +1,1259 @@
+<testset xmlns="http://cpee.org/ns/properties/2.0">
+  <executionhandler>ruby</executionhandler>
+  <dataelements>
+    <car>{"car_id":"bb3cce8c-1fc1-417e-a7ba-92ad695365fc","current_latitude":48.197958,"current_longitude":11.617788,"current_speed":74,"current_speed_limit":80,"fog_lights":false,"lights":true,"arrived":false,"break_time":0,"current_threshold":7,"waypoints":["Munich","Garching"],"timestamp":"2025-03-29 22:01:02","instance_id":53548}</car>
+    <coordinates>[48.197958,11.617788,48.248825,11.651116]</coordinates>
+    <round>1</round>
+    <speed_after_calculations>74</speed_after_calculations>
+    <trafficResponse>{"incidents":0,"live_speeds":83,"free_flow_speeds":83,"road_closure":false,"confidence":1,"timestamps":"2025-03-29 22:01:02","instance_id":53548}</trafficResponse>
+    <travel_distance>15721</travel_distance>
+    <weatherResponse>{"location":"Ismaning","temperatures":9.1,"weather_conditions":"Moderate rain","last_updated":"2025-03-29 22:00","visibility":10.0,"timestamps":"2025-03-29 22:01:02","instance_id":53548}</weatherResponse>
+    <approximated_travel_time>869.679</approximated_travel_time>
+    <speed_calculation_threshold>7</speed_calculation_threshold>
+    <waypoints>Munich,Rosenheim</waypoints>
+    <weather_control>['Fog', 'Mist', 'Heavy snow', 'Blizzard', 'Blowing snow', 'Freezing fog']</weather_control>
+    <data_retrieval_time>2</data_retrieval_time>
+    <instance_id>53772 #Please control the instance id</instance_id>
+    <car_retrieval_time>1</car_retrieval_time>
+  </dataelements>
+  <endpoints>
+    <timeout>https://cpee.org/services/timeout.php</timeout>
+    <subprocess>https://cpee.org/flow/start/url/</subprocess>
+    <get_city_coordinates>https://lehre.bpm.in.tum.de/ports/12879/get_city_coordinates</get_city_coordinates>
+    <get_traffic_data>https://lehre.bpm.in.tum.de/ports/12879/get_traffic_data</get_traffic_data>
+    <get_weather_data>https://lehre.bpm.in.tum.de/ports/12879/get_weather_data</get_weather_data>
+    <worklist>https-post://cpee.org/worklist/server/</worklist>
+    <update_car_speed>https://lehre.bpm.in.tum.de/ports/12879/update_car_speed</update_car_speed>
+    <update_car_lights>https://lehre.bpm.in.tum.de/ports/12879/update_car_lights</update_car_lights>
+    <update_car_fog_lights>https://lehre.bpm.in.tum.de/ports/12879/update_car_fog_lights</update_car_fog_lights>
+    <get_route_data>https://lehre.bpm.in.tum.de/ports/12879/get_route_data</get_route_data>
+    <get_car_state>https://lehre.bpm.in.tum.de/ports/12879/get_car_state</get_car_state>
+    <update_instance_id>https://lehre.bpm.in.tum.de/ports/12879/update_instance_id</update_instance_id>
+    <powernap>https://cpee.org/services/powernap.php</powernap>
+  </endpoints>
+  <attributes>
+    <guarded>none</guarded>
+    <modeltype>CPEE</modeltype>
+    <theme>extended</theme>
+    <guarded_id/>
+    <creator>Christine Ashcreek</creator>
+    <info>bugratuncer-route-analysis-project-2</info>
+    <author>Christine Ashcreek</author>
+    <model_uuid>39f6d3d9-98c2-4cc5-ba3e-8cdd659ab52c</model_uuid>
+    <model_version/>
+    <design_stage>development</design_stage>
+    <design_dir>Teaching.dir/Prak.dir/TUM-Prak-24-WS.dir/Bugra Tuncer.dir/</design_dir>
+  </attributes>
+  <description>
+    <description xmlns="http://cpee.org/ns/description/1.0">
+      <manipulate id="a13" label="Clean the data elements">data.car = {}
+data.trafficResponse = {}
+data.weatherResponse = {}
+data.speed_after_calculations = 0
+data.speed_calculation_threshold = 0
+data.round = 0</manipulate>
+      <call id="a10" endpoint="update_instance_id">
+        <parameters>
+          <label>Provide Instance Id / Initialize-Get car object</label>
+          <method>:post</method>
+          <arguments>
+            <instance_id>!data.instance_id</instance_id>
+            <waypoints>!data.waypoints</waypoints>
+          </arguments>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result">data.car = result["car"]</finalize>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+      <choose mode="exclusive">
+        <alternative condition="data.car[&quot;current_latitude&quot;] == 0 &amp;&amp; data.car[&quot;current_longitude&quot;] == 0">
+          <manipulate id="a2" label="Clean up coordinates">data.coordinates = []</manipulate>
+          <_probability>
+            <_probability_min/>
+            <_probability_max/>
+            <_probability_avg/>
+          </_probability>
+          <call id="a29" endpoint="get_city_coordinates">
+            <parameters>
+              <label>Retrieve coordinates by TomTom Geocoding API</label>
+              <method>:get</method>
+              <arguments>
+                <city>!data.waypoints.split(',')[0]</city>
+                <city>!data.waypoints.split(',')[1]</city>
+              </arguments>
+            </parameters>
+            <code>
+              <prepare/>
+              <finalize output="result">data.coordinates &lt;&lt; result['latitude']
+data.coordinates &lt;&lt; result['longitude']
+data.coordinates &lt;&lt; result['arrival_latitude']
+data.coordinates &lt;&lt; result['arrival_longitude']</finalize>
+              <update output="result"/>
+              <rescue output="result"/>
+            </code>
+            <annotations>
+              <_generic/>
+              <_timing>
+                <_timing_weight/>
+                <_timing_avg/>
+                <explanations/>
+              </_timing>
+              <_shifting>
+                <_shifting_type>Duration</_shifting_type>
+              </_shifting>
+              <_context_data_analysis>
+                <probes/>
+                <ips/>
+              </_context_data_analysis>
+              <report>
+                <url/>
+              </report>
+              <_notes>
+                <_notes_general/>
+              </_notes>
+            </annotations>
+            <documentation>
+              <input/>
+              <output/>
+              <implementation>
+                <description/>
+              </implementation>
+              <code>
+                <description/>
+              </code>
+            </documentation>
+          </call>
+          <manipulate id="a1" label="Set new car object's current location with initial coordinates">data.car["current_latitude"] = data.coordinates[0]
+data.car["current_longitude"] = data.coordinates[1]</manipulate>
+        </alternative>
+        <otherwise/>
+      </choose>
+      <call id="a6" endpoint="get_route_data">
+        <parameters>
+          <label>Plan/Get Route</label>
+          <method>:get</method>
+          <arguments>
+            <waypoints>!data.coordinates[0]</waypoints>
+            <waypoints>!data.coordinates[1]</waypoints>
+            <waypoints>!data.coordinates[2]</waypoints>
+            <waypoints>!data.coordinates[3]</waypoints>
+            <instance_id>!data.instance_id</instance_id>
+          </arguments>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result">data.travel_distance = result['distance']
+data.approximated_travel_time = result['time']</finalize>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes/>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+      <parallel wait="-1" cancel="last">
+        <parallel_branch>
+          <call id="a14" endpoint="timeout">
+            <parameters>
+              <label>Wait for initial data retrieval</label>
+              <method>:post</method>
+              <arguments>
+                <timeout>10</timeout>
+              </arguments>
+            </parameters>
+            <code>
+              <prepare/>
+              <finalize output="result"/>
+              <update output="result"/>
+              <rescue output="result"/>
+            </code>
+            <annotations>
+              <_generic/>
+              <_timing>
+                <_timing_weight/>
+                <_timing_avg/>
+                <explanations/>
+              </_timing>
+              <_shifting>
+                <_shifting_type>Duration</_shifting_type>
+              </_shifting>
+              <_context_data_analysis>
+                <probes/>
+                <ips/>
+              </_context_data_analysis>
+              <report>
+                <url/>
+              </report>
+              <_notes>
+                <_notes_general/>
+              </_notes>
+            </annotations>
+            <documentation>
+              <input/>
+              <output/>
+              <implementation>
+                <description/>
+              </implementation>
+              <code>
+                <description/>
+              </code>
+            </documentation>
+          </call>
+          <loop mode="pre_test" condition="data.car[&quot;arrived&quot;] != true">
+            <_probability>
+              <_probability_min/>
+              <_probability_max/>
+              <_probability_avg/>
+            </_probability>
+            <parallel wait="-1" cancel="last">
+              <parallel_branch>
+                <manipulate id="a32" label="Base threshold calculation (Parameters = Confidence-Traffic Density)">threshold = 0
+
+if data.trafficResponse["confidence"] == 1
+  threshold += 5
+else
+  threshold += 2
+end
+
+# Expected traffic density (dynamic calculation)
+free_flow = data.trafficResponse["free_flow_speeds"].to_f
+live_speed = data.trafficResponse["live_speeds"].to_f
+
+if free_flow &gt; live_speed
+  slowdown_percent = ((free_flow - live_speed) / free_flow) * 100
+
+  case slowdown_percent
+  when 0..10   then threshold += 5   # Light traffic (e.g., 5-10% slower)
+  when 10..30  then threshold += 10  # Moderate congestion
+  when 30..50  then threshold += 15  # Heavy congestion
+  else          threshold += 20       # Gridlock (&gt;50% slower)
+  end
+end
+
+data.speed_calculation_threshold = threshold</manipulate>
+                <manipulate id="a3" label="Rush hour traffic congestion calculation">threshold = data.speed_calculation_threshold
+rush_hour = DateTime.now().hour
+
+if rush_hour.between?(6, 9) || rush_hour.between?(16, 19)
+  threshold += 5  # Add a base penalty for expected delays
+end
+
+data.speed_calculation_threshold = threshold</manipulate>
+                <choose mode="exclusive">
+                  <alternative condition="data.trafficResponse[&quot;incidents&quot;] != 0 || data.trafficResponse[&quot;road_closure&quot;] != false">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <manipulate id="a21" label="Increase threshold due to accident/road closure">threshold = data.speed_calculation_threshold
+
+# If there's an incident, we want a stricter threshold (increase threshold for more severe slowdown)
+if data.trafficResponse["incidents"] &gt; 0
+  threshold += [data.trafficResponse["incidents"] * 5, 15].min  # Increase threshold if there are incidents
+end
+
+# If there's a road closure, make the threshold very high
+if data.trafficResponse["road_closure"]
+  threshold += 20 # Set a high threshold for road closure, indicating a significant slowdown
+end
+
+data.speed_calculation_threshold = threshold</manipulate>
+                  </alternative>
+                  <otherwise/>
+                </choose>
+                <choose mode="exclusive">
+                  <alternative condition="data.weatherResponse[&quot;visibility&quot;] &lt;= 5">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <manipulate id="a31" label="Increase threshold due to low visibility">threshold = data.speed_calculation_threshold
+
+weather = data.weatherResponse["weather_conditions"]
+visibility_km = data.weatherResponse["visibility"]
+
+# Only apply if weather isn't already penalized (e.g., fog/blizzard)
+if !data.weather_control.include?(weather)
+  case visibility_km
+  when 0.1..0.5 then threshold += 15  # Extremely poor (100-500m)
+  when 0.5..1   then threshold += 10  # Very poor (500m-1km)
+  when 1..3     then threshold += 5   # Poor (1-3km)
+  when 3..5     then threshold += 2   # Moderate (3-5km)
+  end
+end
+
+data.speed_calculation_threshold = threshold</manipulate>
+                  </alternative>
+                  <alternative condition="5 &lt; data.weatherResponse[&quot;visibility&quot;] &amp;&amp; data.weatherResponse[&quot;visibility&quot;] &lt; 10">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <manipulate id="a30" label="Increase threshold due to moderate visibility">threshold = data.speed_calculation_threshold
+
+if data.weatherResponse["visibility"] &lt; 10
+    threshold += 1 # Increase threshold due to low visibility
+ end
+
+data.speed_calculation_threshold = threshold</manipulate>
+                  </alternative>
+                  <otherwise/>
+                </choose>
+                <manipulate id="a20" label="Increase threshold based on weather conditions">threshold = data.speed_calculation_threshold
+weather = data.weatherResponse["weather_conditions"]
+
+
+case weather
+# Extreme Impact (15+ threshold)
+when "Blizzard", "Heavy snow", "Blowing snow",
+     "Moderate or heavy freezing rain",
+     "Torrential rain shower",
+     "Moderate or heavy rain with thunder",
+     "Moderate or heavy snow with thunder"
+  threshold += 15
+
+# High Impact (10 threshold)
+when "Heavy rain", "Heavy rain at times",
+     "Moderate or heavy sleet",
+     "Moderate or heavy sleet showers",
+     "Moderate or heavy showers of ice pellets",
+     "Freezing fog",
+     "Heavy freezing drizzle"
+  threshold += 10
+
+# Moderate Impact (5 threshold)
+when "Fog", "Mist", "Freezing fog",
+     "Moderate rain", "Moderate rain at times",
+     "Light freezing rain", "Light sleet",
+     "Patchy heavy snow", "Moderate snow",
+     "Ice pellets", "Thundery outbreaks possible"
+  threshold += 5
+
+# Light Impact (2-3 threshold)
+when "Light rain", "Light drizzle", "Light snow",
+     "Patchy light rain", "Patchy light snow",
+     "Patchy light drizzle"
+  threshold += 2
+
+# No penalty for:
+# Sunny/Clear, Partly cloudy, Cloudy, Overcast etc.
+else
+  threshold += 0
+end
+
+
+data.speed_calculation_threshold = threshold</manipulate>
+                <manipulate id="a16" label="Calculate new speed with final threshold parameter">speed = data.car["current_speed_limit"]
+threshold = data.speed_calculation_threshold
+
+if speed == -1 || speed == "unlimited"
+  speed = 140 # Default for unlimited roads (e.g., autobahn-like scenarios)
+end
+
+# Cap threshold to avoid over-reduction
+threshold = [threshold, 50].min
+
+# Nonlinear speed reduction
+reduction = case threshold
+            when 0..10 then threshold * 1.0 / 100
+            when 10..30 then 0.1 + (threshold - 10) * 0.015
+            else 0.4 + (threshold - 30) * 0.01
+            end
+
+data.speed_after_calculations = (speed * (1 - reduction)).round
+data.speed_calculation_threshold = threshold</manipulate>
+                <choose mode="exclusive">
+                  <alternative condition="true">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <call id="a7" endpoint="update_car_speed">
+                      <parameters>
+                        <label>Car has been moved, update with new calculated speed</label>
+                        <method>:post</method>
+                        <arguments>
+                          <current_speed>!data.speed_after_calculations</current_speed>
+                          <instance_id>!data.instance_id</instance_id>
+                          <current_threshold>!data.speed_calculation_threshold</current_threshold>
+                        </arguments>
+                      </parameters>
+                      <code>
+                        <prepare/>
+                        <finalize output="result">data.car = result["car"]</finalize>
+                        <update output="result"/>
+                        <rescue output="result"/>
+                      </code>
+                      <annotations>
+                        <_generic/>
+                        <_timing>
+                          <_timing_weight/>
+                          <_timing_avg/>
+                          <explanations/>
+                        </_timing>
+                        <_shifting>
+                          <_shifting_type>Duration</_shifting_type>
+                        </_shifting>
+                        <_context_data_analysis>
+                          <probes>
+                            <probe>
+                              <id>CarData</id>
+                              <source>car</source>
+                              <extractor_type>extrinsic</extractor_type>
+                              <extractor_code>x = StreamPoint.new()
+x.value = result
+x</extractor_code>
+                              <extractor_url/>
+                              <extractor_params/>
+                              <visualizer_url/>
+                              <visualizer_params/>
+                            </probe>
+                          </probes>
+                          <ips/>
+                        </_context_data_analysis>
+                        <report>
+                          <url/>
+                        </report>
+                        <_notes>
+                          <_notes_general/>
+                        </_notes>
+                      </annotations>
+                      <documentation>
+                        <input/>
+                        <output/>
+                        <implementation>
+                          <description/>
+                        </implementation>
+                        <code>
+                          <description/>
+                        </code>
+                      </documentation>
+                    </call>
+                    <manipulate id="a22" label="Update coordinates list">data.coordinates[0] = data.car["current_latitude"]
+data.coordinates[1] = data.car["current_longitude"]</manipulate>
+                  </alternative>
+                  <otherwise/>
+                </choose>
+              </parallel_branch>
+              <parallel_branch>
+                <choose mode="exclusive">
+                  <alternative condition="data.weather_control.include?(data.weatherResponse[&quot;weather_conditions&quot;]) &amp;&amp; data.car[&quot;fog_lights&quot;] == false">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <call id="a26" endpoint="update_car_fog_lights">
+                      <parameters>
+                        <label>Turn on car fog lights</label>
+                        <method>:post</method>
+                        <arguments>
+                          <car_fog_lights>True</car_fog_lights>
+                          <instance_id>!data.instance_id</instance_id>
+                        </arguments>
+                      </parameters>
+                      <code>
+                        <prepare/>
+                        <finalize output="result">data.car = result["car"]</finalize>
+                        <update output="result"/>
+                        <rescue output="result"/>
+                      </code>
+                      <annotations>
+                        <_generic/>
+                        <_timing>
+                          <_timing_weight/>
+                          <_timing_avg/>
+                          <explanations/>
+                        </_timing>
+                        <_shifting>
+                          <_shifting_type>Duration</_shifting_type>
+                        </_shifting>
+                        <_context_data_analysis>
+                          <probes/>
+                          <ips/>
+                        </_context_data_analysis>
+                        <report>
+                          <url/>
+                        </report>
+                        <_notes>
+                          <_notes_general/>
+                        </_notes>
+                      </annotations>
+                      <documentation>
+                        <input/>
+                        <output/>
+                        <implementation>
+                          <description/>
+                        </implementation>
+                        <code>
+                          <description/>
+                        </code>
+                      </documentation>
+                    </call>
+                  </alternative>
+                  <alternative condition="!(data.weather_control.include?(data.weatherResponse[&quot;weather_conditions&quot;])) &amp;&amp; data.car[&quot;fog_lights&quot;] == true">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <call id="a15" endpoint="update_car_fog_lights">
+                      <parameters>
+                        <label>Turn off car fog lights</label>
+                        <method>:post</method>
+                        <arguments>
+                          <car_fog_lights>False</car_fog_lights>
+                          <instance_id>!data.instance_id</instance_id>
+                        </arguments>
+                      </parameters>
+                      <code>
+                        <prepare/>
+                        <finalize output="result">data.car = result["car"]</finalize>
+                        <update output="result"/>
+                        <rescue output="result"/>
+                      </code>
+                      <annotations>
+                        <_generic/>
+                        <_timing>
+                          <_timing_weight/>
+                          <_timing_avg/>
+                          <explanations/>
+                        </_timing>
+                        <_shifting>
+                          <_shifting_type>Duration</_shifting_type>
+                        </_shifting>
+                        <_context_data_analysis>
+                          <probes/>
+                          <ips/>
+                        </_context_data_analysis>
+                        <report>
+                          <url/>
+                        </report>
+                        <_notes>
+                          <_notes_general/>
+                        </_notes>
+                      </annotations>
+                      <documentation>
+                        <input/>
+                        <output/>
+                        <implementation>
+                          <description/>
+                        </implementation>
+                        <code>
+                          <description/>
+                        </code>
+                      </documentation>
+                    </call>
+                  </alternative>
+                  <otherwise/>
+                </choose>
+              </parallel_branch>
+              <parallel_branch>
+                <choose mode="exclusive">
+                  <alternative condition="(DateTime.now().hour &gt;= 18 || DateTime.now().hour &lt; 6) &amp;&amp; data.car[&quot;lights&quot;] == false">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <call id="a12" endpoint="update_car_lights">
+                      <parameters>
+                        <label>Turn on car lights</label>
+                        <method>:post</method>
+                        <arguments>
+                          <car_lights>True</car_lights>
+                          <instance_id>!data.instance_id</instance_id>
+                        </arguments>
+                      </parameters>
+                      <code>
+                        <prepare/>
+                        <finalize output="result">data.car = result["car"]</finalize>
+                        <update output="result"/>
+                        <rescue output="result"/>
+                      </code>
+                      <annotations>
+                        <_generic/>
+                        <_timing>
+                          <_timing_weight/>
+                          <_timing_avg/>
+                          <explanations/>
+                        </_timing>
+                        <_shifting>
+                          <_shifting_type>Duration</_shifting_type>
+                        </_shifting>
+                        <_context_data_analysis>
+                          <probes/>
+                          <ips/>
+                        </_context_data_analysis>
+                        <report>
+                          <url/>
+                        </report>
+                        <_notes>
+                          <_notes_general/>
+                        </_notes>
+                      </annotations>
+                      <documentation>
+                        <input/>
+                        <output/>
+                        <implementation>
+                          <description/>
+                        </implementation>
+                        <code>
+                          <description/>
+                        </code>
+                      </documentation>
+                    </call>
+                  </alternative>
+                  <alternative condition="(DateTime.now().hour &lt; 18 &amp;&amp; DateTime.now().hour &gt;= 6) &amp;&amp;  data.car[&quot;lights&quot;] == true">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <call id="a23" endpoint="update_car_lights">
+                      <parameters>
+                        <label>Turn off car lights</label>
+                        <method>:post</method>
+                        <arguments>
+                          <car_lights>False</car_lights>
+                          <instance_id>!data.instance_id</instance_id>
+                        </arguments>
+                      </parameters>
+                      <code>
+                        <prepare/>
+                        <finalize output="result">data.car = result["car"]</finalize>
+                        <update output="result"/>
+                        <rescue output="result"/>
+                      </code>
+                      <annotations>
+                        <_generic/>
+                        <_timing>
+                          <_timing_weight/>
+                          <_timing_avg/>
+                          <explanations/>
+                        </_timing>
+                        <_shifting>
+                          <_shifting_type>Duration</_shifting_type>
+                        </_shifting>
+                        <_context_data_analysis>
+                          <probes/>
+                          <ips/>
+                        </_context_data_analysis>
+                        <report>
+                          <url/>
+                        </report>
+                        <_notes>
+                          <_notes_general/>
+                        </_notes>
+                      </annotations>
+                      <documentation>
+                        <input/>
+                        <output/>
+                        <implementation>
+                          <description/>
+                        </implementation>
+                        <code>
+                          <description/>
+                        </code>
+                      </documentation>
+                    </call>
+                  </alternative>
+                  <otherwise/>
+                </choose>
+              </parallel_branch>
+            </parallel>
+            <call id="a8" endpoint="powernap">
+              <parameters>
+                <label>Wait for new control</label>
+                <method>:post</method>
+                <arguments>
+                  <timeout>!data.car_retrieval_time</timeout>
+                </arguments>
+              </parameters>
+              <code>
+                <prepare/>
+                <finalize output="result"/>
+                <update output="result"/>
+                <rescue output="result"/>
+              </code>
+              <annotations>
+                <_generic/>
+                <_timing>
+                  <_timing_weight/>
+                  <_timing_avg/>
+                  <explanations/>
+                </_timing>
+                <_shifting>
+                  <_shifting_type>Duration</_shifting_type>
+                </_shifting>
+                <_context_data_analysis>
+                  <probes/>
+                  <ips/>
+                </_context_data_analysis>
+                <report>
+                  <url/>
+                </report>
+                <_notes>
+                  <_notes_general/>
+                </_notes>
+              </annotations>
+              <documentation>
+                <input/>
+                <output/>
+                <implementation>
+                  <description/>
+                </implementation>
+                <code>
+                  <description/>
+                </code>
+              </documentation>
+            </call>
+          </loop>
+        </parallel_branch>
+        <parallel_branch>
+          <parallel wait="-1" cancel="last">
+            <parallel_branch>
+              <loop mode="pre_test" condition="data.car[&quot;arrived&quot;] != true">
+                <_probability>
+                  <_probability_min/>
+                  <_probability_max/>
+                  <_probability_avg/>
+                </_probability>
+                <call id="a9" endpoint="get_traffic_data">
+                  <parameters>
+                    <label>Get Traffic Data</label>
+                    <method>:get</method>
+                    <arguments>
+                      <latitude>!data.car["current_latitude"]</latitude>
+                      <longitude>!data.car["current_longitude"]</longitude>
+                      <instance_id>!data.instance_id</instance_id>
+                    </arguments>
+                  </parameters>
+                  <code>
+                    <prepare/>
+                    <finalize output="result">data.trafficResponse = result</finalize>
+                    <update output="result"/>
+                    <rescue output="result"/>
+                  </code>
+                  <annotations>
+                    <_generic/>
+                    <_timing>
+                      <_timing_weight/>
+                      <_timing_avg/>
+                      <explanations/>
+                    </_timing>
+                    <_shifting>
+                      <_shifting_type>Duration</_shifting_type>
+                    </_shifting>
+                    <_context_data_analysis>
+                      <probes>
+                        <probe>
+                          <id>TrafficData</id>
+                          <source>traffic</source>
+                          <extractor_type>extrinsic</extractor_type>
+                          <extractor_code>x = StreamPoint.new()
+x.value = result
+x</extractor_code>
+                          <extractor_url/>
+                          <extractor_params/>
+                          <visualizer_url/>
+                          <visualizer_params/>
+                        </probe>
+                      </probes>
+                      <ips/>
+                    </_context_data_analysis>
+                    <report>
+                      <url/>
+                    </report>
+                    <_notes>
+                      <_notes_general/>
+                    </_notes>
+                  </annotations>
+                  <documentation>
+                    <input/>
+                    <output/>
+                    <implementation>
+                      <description/>
+                    </implementation>
+                    <code>
+                      <description/>
+                    </code>
+                  </documentation>
+                </call>
+                <choose mode="exclusive">
+                  <alternative condition="data.round != 1">
+                    <_probability>
+                      <_probability_min/>
+                      <_probability_max/>
+                      <_probability_avg/>
+                    </_probability>
+                    <call id="a11" endpoint="update_car_speed">
+                      <parameters>
+                        <label>Update car speed with live speed for initial setup</label>
+                        <method>:post</method>
+                        <arguments>
+                          <current_speed>!data.trafficResponse["free_flow_speeds"]</current_speed>
+                          <instance_id>!data.instance_id</instance_id>
+                          <current_threshold>0</current_threshold>
+                        </arguments>
+                      </parameters>
+                      <code>
+                        <prepare/>
+                        <finalize output="result">data.car = result["car"]</finalize>
+                        <update output="result"/>
+                        <rescue output="result"/>
+                      </code>
+                      <annotations>
+                        <_generic/>
+                        <_timing>
+                          <_timing_weight/>
+                          <_timing_avg/>
+                          <explanations/>
+                        </_timing>
+                        <_shifting>
+                          <_shifting_type>Duration</_shifting_type>
+                        </_shifting>
+                        <_context_data_analysis>
+                          <probes>
+                            <probe>
+                              <id>CarData</id>
+                              <source>car</source>
+                              <extractor_type>extrinsic</extractor_type>
+                              <extractor_code>x = StreamPoint.new()
+x.value = result
+x</extractor_code>
+                              <extractor_url/>
+                              <extractor_params/>
+                              <visualizer_url/>
+                              <visualizer_params/>
+                            </probe>
+                          </probes>
+                          <ips/>
+                        </_context_data_analysis>
+                        <report>
+                          <url/>
+                        </report>
+                        <_notes>
+                          <_notes_general/>
+                        </_notes>
+                      </annotations>
+                      <documentation>
+                        <input/>
+                        <output/>
+                        <implementation>
+                          <description/>
+                        </implementation>
+                        <code>
+                          <description/>
+                        </code>
+                      </documentation>
+                    </call>
+                    <manipulate id="a33" label="Update round">data.round = 1</manipulate>
+                  </alternative>
+                  <otherwise/>
+                </choose>
+                <call id="a17" endpoint="powernap">
+                  <parameters>
+                    <label>Wait Trafic Data</label>
+                    <method>:post</method>
+                    <arguments>
+                      <timeout>!data.data_retrieval_time</timeout>
+                    </arguments>
+                  </parameters>
+                  <code>
+                    <prepare/>
+                    <finalize output="result"/>
+                    <update output="result"/>
+                    <rescue output="result"/>
+                  </code>
+                  <annotations>
+                    <_generic/>
+                    <_timing>
+                      <_timing_weight/>
+                      <_timing_avg/>
+                      <explanations/>
+                    </_timing>
+                    <_shifting>
+                      <_shifting_type>Duration</_shifting_type>
+                    </_shifting>
+                    <_context_data_analysis>
+                      <probes/>
+                      <ips/>
+                    </_context_data_analysis>
+                    <report>
+                      <url/>
+                    </report>
+                    <_notes>
+                      <_notes_general/>
+                    </_notes>
+                  </annotations>
+                  <documentation>
+                    <input/>
+                    <output/>
+                    <implementation>
+                      <description/>
+                    </implementation>
+                    <code>
+                      <description/>
+                    </code>
+                  </documentation>
+                </call>
+              </loop>
+            </parallel_branch>
+            <parallel_branch>
+              <loop mode="pre_test" condition="data.car[&quot;arrived&quot;] != true">
+                <_probability>
+                  <_probability_min/>
+                  <_probability_max/>
+                  <_probability_avg/>
+                </_probability>
+                <call id="a18" endpoint="get_weather_data">
+                  <parameters>
+                    <label>Get Weather Data</label>
+                    <method>:get</method>
+                    <arguments>
+                      <latitude>!data.car["current_latitude"]</latitude>
+                      <longitude>!data.car["current_longitude"]</longitude>
+                      <instance_id>!data.instance_id</instance_id>
+                    </arguments>
+                  </parameters>
+                  <code>
+                    <prepare/>
+                    <finalize output="result">data.weatherResponse = result</finalize>
+                    <update output="result"/>
+                    <rescue output="result"/>
+                  </code>
+                  <annotations>
+                    <_generic/>
+                    <_timing>
+                      <_timing_weight/>
+                      <_timing_avg/>
+                      <explanations/>
+                    </_timing>
+                    <_shifting>
+                      <_shifting_type>Duration</_shifting_type>
+                    </_shifting>
+                    <_context_data_analysis>
+                      <probes>
+                        <probe>
+                          <id>WeatherData</id>
+                          <source>weather</source>
+                          <extractor_type>extrinsic</extractor_type>
+                          <extractor_code>x = StreamPoint.new()
+x.value = result
+x</extractor_code>
+                          <extractor_url/>
+                          <extractor_params/>
+                          <visualizer_url/>
+                          <visualizer_params/>
+                        </probe>
+                      </probes>
+                      <ips/>
+                    </_context_data_analysis>
+                    <report>
+                      <url/>
+                    </report>
+                    <_notes>
+                      <_notes_general/>
+                    </_notes>
+                  </annotations>
+                  <documentation>
+                    <input/>
+                    <output/>
+                    <implementation>
+                      <description/>
+                    </implementation>
+                    <code>
+                      <description/>
+                    </code>
+                  </documentation>
+                </call>
+                <call id="a19" endpoint="powernap">
+                  <parameters>
+                    <label>Wait Weather Data</label>
+                    <method>:post</method>
+                    <arguments>
+                      <timeout>!data.data_retrieval_time</timeout>
+                    </arguments>
+                  </parameters>
+                  <code>
+                    <prepare/>
+                    <finalize output="result"/>
+                    <update output="result"/>
+                    <rescue output="result"/>
+                  </code>
+                  <annotations>
+                    <_generic/>
+                    <_timing>
+                      <_timing_weight/>
+                      <_timing_avg/>
+                      <explanations/>
+                    </_timing>
+                    <_shifting>
+                      <_shifting_type>Duration</_shifting_type>
+                    </_shifting>
+                    <_context_data_analysis>
+                      <probes/>
+                      <ips/>
+                    </_context_data_analysis>
+                    <report>
+                      <url/>
+                    </report>
+                    <_notes>
+                      <_notes_general/>
+                    </_notes>
+                  </annotations>
+                  <documentation>
+                    <input/>
+                    <output/>
+                    <implementation>
+                      <description/>
+                    </implementation>
+                    <code>
+                      <description/>
+                    </code>
+                  </documentation>
+                </call>
+              </loop>
+            </parallel_branch>
+            <parallel_branch>
+              <loop mode="pre_test" condition="data.car[&quot;arrived&quot;] != true">
+                <_probability>
+                  <_probability_min/>
+                  <_probability_max/>
+                  <_probability_avg/>
+                </_probability>
+                <call id="a5" endpoint="get_car_state">
+                  <parameters>
+                    <label>Get latest car state</label>
+                    <method>:get</method>
+                    <arguments>
+                      <instance_id>!data.instance_id</instance_id>
+                    </arguments>
+                  </parameters>
+                  <code>
+                    <prepare/>
+                    <finalize output="result">data.car = result["car"]</finalize>
+                    <update output="result"/>
+                    <rescue output="result"/>
+                  </code>
+                  <annotations>
+                    <_generic/>
+                    <_timing>
+                      <_timing_weight/>
+                      <_timing_avg/>
+                      <explanations/>
+                    </_timing>
+                    <_shifting>
+                      <_shifting_type>Duration</_shifting_type>
+                    </_shifting>
+                    <_context_data_analysis>
+                      <probes/>
+                      <ips/>
+                    </_context_data_analysis>
+                    <report>
+                      <url/>
+                    </report>
+                    <_notes>
+                      <_notes_general/>
+                    </_notes>
+                  </annotations>
+                  <documentation>
+                    <input/>
+                    <output/>
+                    <implementation>
+                      <description/>
+                    </implementation>
+                    <code>
+                      <description/>
+                    </code>
+                  </documentation>
+                </call>
+                <manipulate id="a24" label="Update coordinates list with the current position">data.coordinates[0] = data.car["current_latitude"]
+data.coordinates[1] = data.car["current_longitude"]</manipulate>
+                <call id="a28" endpoint="powernap">
+                  <parameters>
+                    <label>Wait car data</label>
+                    <method>:post</method>
+                    <arguments>
+                      <timeout>!data.car_retrieval_time</timeout>
+                    </arguments>
+                  </parameters>
+                  <code>
+                    <prepare/>
+                    <finalize output="result"/>
+                    <update output="result"/>
+                    <rescue output="result"/>
+                  </code>
+                  <annotations>
+                    <_generic/>
+                    <_timing>
+                      <_timing_weight/>
+                      <_timing_avg/>
+                      <explanations/>
+                    </_timing>
+                    <_shifting>
+                      <_shifting_type>Duration</_shifting_type>
+                    </_shifting>
+                    <_context_data_analysis>
+                      <probes/>
+                      <ips/>
+                    </_context_data_analysis>
+                    <report>
+                      <url/>
+                    </report>
+                    <_notes>
+                      <_notes_general/>
+                    </_notes>
+                  </annotations>
+                  <documentation>
+                    <input/>
+                    <output/>
+                    <implementation>
+                      <description/>
+                    </implementation>
+                    <code>
+                      <description/>
+                    </code>
+                  </documentation>
+                </call>
+              </loop>
+            </parallel_branch>
+          </parallel>
+        </parallel_branch>
+      </parallel>
+      <call id="a27" endpoint="update_car_speed">
+        <parameters>
+          <label>Update car speed to 0</label>
+          <method>:post</method>
+          <arguments>
+            <current_speed>0</current_speed>
+            <instance_id>!data.instance_id</instance_id>
+            <current_threshold>!data.speed_calculation_threshold</current_threshold>
+          </arguments>
+        </parameters>
+        <code>
+          <prepare/>
+          <finalize output="result">data.car = result["car"]</finalize>
+          <update output="result"/>
+          <rescue output="result"/>
+        </code>
+        <annotations>
+          <_generic/>
+          <_timing>
+            <_timing_weight/>
+            <_timing_avg/>
+            <explanations/>
+          </_timing>
+          <_shifting>
+            <_shifting_type>Duration</_shifting_type>
+          </_shifting>
+          <_context_data_analysis>
+            <probes>
+              <probe>
+                <id>CarData</id>
+                <source>car</source>
+                <extractor_type>extrinsic</extractor_type>
+                <extractor_code>x = StreamPoint.new()
+x.value = result
+x</extractor_code>
+                <extractor_url/>
+                <extractor_params/>
+                <visualizer_url/>
+                <visualizer_params/>
+              </probe>
+            </probes>
+            <ips/>
+          </_context_data_analysis>
+          <report>
+            <url/>
+          </report>
+          <_notes>
+            <_notes_general/>
+          </_notes>
+        </annotations>
+        <documentation>
+          <input/>
+          <output/>
+          <implementation>
+            <description/>
+          </implementation>
+          <code>
+            <description/>
+          </code>
+        </documentation>
+      </call>
+    </description>
+  </description>
+  <transformation>
+    <description type="copy"/>
+    <dataelements type="none"/>
+    <endpoints type="none"/>
+  </transformation>
+</testset>
